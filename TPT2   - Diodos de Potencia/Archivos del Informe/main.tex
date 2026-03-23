@@ -1,0 +1,190 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{siunitx} % Ángulos
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{minted} % Códigos
+\graphicspath{{Figuras/}}
+\onehalfspacing
+
+
+% Datos
+\author{Nombre y Apellido \\ Legajo: XXXXX}
+\date{\today}
+
+\begin{document}
+
+% Carátula personalizada
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.25\textwidth]{escudo.png} 
+    \hspace{1cm}
+    \includegraphics[width=0.3\textwidth]{download.png} \\[1cm]
+
+    {\large \textbf{UNIVERSIDAD NACIONAL DE CÓRDOBA} \\[0.5cm]}
+    {\large \textbf {FACULTAD DE CIENCIAS EXACTAS, FÍSICAS Y NATURALES} \\[1cm]}
+    {\Large ELECTRÓNICA INDUSTRIAL \\[1cm]}
+
+    \rule{\textwidth}{0.5pt} \\[0.5cm]
+    {\Large \textbf{Trabajo Práctico Teórico N°2} \\[0.3cm]}
+    {\Large \textbf{Diodos de Potencia} \\[0.3cm]}
+    \rule{\textwidth}{0.5pt} \\[1cm]
+
+\begin{tabular}{l l}
+\textbf{Profesor Titular:} & Ing. Agüero Adrián.\\
+\textbf{Profesor Adjunto:} & Ing. Gangi O. Sergio.\\
+\textbf{Profesor Adjunto:} & Ing. Laboret Sergio.\\
+
+\\
+\textbf{Alumno:} Monja, Ernesto Joaquín. \\
+\textbf{DNI:} 43.873.728 \\
+\end{tabular}\\[3cm]
+
+{\centering Año 2026 \par}
+
+\end{titlepage}
+
+
+
+% Índice
+\tableofcontents
+\newpage
+\indent
+
+
+
+\section{Introducción}
+En este trabajo práctico se busca investigar sobre los diodos de potencia existentes en el mercado, analizar sus hojas de datos y realizar simulaciones sobre los mismos en cuanto a parámetros característicos, gráficas y selección de los mismos para aplicaciones de la Electrónica de Potencia.
+
+
+\section{Desarrollo}
+\subsection{Consigna 1: Lectura de Hojas de Datos}
+El diodo de potencia elegido para esta aplicación es el MUR1560 el cual es un diodo de recuperación ultra rápida el cual fue diseñado específicamente para minimizar las pérdidas de energía durante la conmutación. El encapsulado utilizado es un $TO-220AC$. Si buscamos en Internet, podemos encontrar la hoja de datos del mismo, en la cual identificamos las siguientes tablas:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figura 1.png}
+    \caption{{\href{https://www.alldatasheet.com/datasheet-pdf/view/174405/ONSEMI/MUR1560.html}{Tabla 1 de la Hoja de datos del MUR1560.}}}
+    \label{fig:fig_1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 2.png}
+    \caption{{\href{https://www.alldatasheet.com/datasheet-pdf/view/231824/SIRECTIFIER/MUR1560.html}{Tabla 2 de la Hoja de datos del MUR1560.}}}
+    \label{fig:fig_2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 3.png}
+    \caption{{\href{https://www.alldatasheet.com/datasheet-pdf/view/2205288/MULTICOMP/MUR1560.html}{Tabla 3 de la Hoja de datos del MUR1560.}}}
+    \label{fig:fig_3}
+\end{figure}
+
+En estas tablas, podemos identificar los siguientes parámetros:
+
+\begin{itemize}
+    \item $I_{F(AV)} = 15 \ [A]$ a $T_{C} = 145\ [°C]$. Véase la Figura (\ref{fig:fig_1})
+    \item $I_{FRMS} = 25 \ [A]$. Véase la Figura (\ref{fig:fig_2})
+    \item $I_{FSM} = 150 \ [A]$. Véase la Figura (\ref{fig:fig_1})
+    \item $V_{RRM} = 600 \ [V]$. Véase la Figura (\ref{fig:fig_1})
+    \item $V_{RRW} = 600 \ [V]$. Véase la Figura (\ref{fig:fig_1}) como $V_{RRW} = V_{RWM}$.
+    \item $V_{RSM} =  420 \ [V]$. Véase la Figura (\ref{fig:fig_3})
+    \item $i^{2}t = 36 \ [A^{2}s]$ a $T_{C} = 150\ [°C]$ con $t = 10 \ [ms] \ (50 \ [Hz])$ onda sinusoidal. Véase la Figura (\ref{fig:fig_2})
+\end{itemize}
+
+El fabricante ademas provee una gráfica de Potencia Disipada ($P_{D}$) contra la Corriente Media Promedio ($I_{F(AV)}$) la cual se presenta a continuación:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\linewidth]{Figura 4.png}
+    \caption{{\href{https://www.alldatasheet.com/datasheet-pdf/view/174405/ONSEMI/MUR1560.html}{Gráfica de Potencia Disipada ($P_{D}$) contra la Corriente Media Promedio ($I_{F(AV)}$).}}}
+    \label{fig:fig_4}
+\end{figure}
+
+Las curvas paramétricas de esta gráfica corresponden al tipo de carga que va conectada al diodo ya que la potencia que el mismo debe disipar depende directamente de la forma que tiene la corriente, la cual está determinada por el tipo de carga y el circuito en el que esta siendo usado.
+
+Se tiene que los extremos (o valores máximos) de cada curva paramétrica que presenta esta gráfica corresponden a la máxima capacidad de disipación térmica del diodo antes de superar la temperatura máxima de unión ($T_J = 175 \ [°C]$ según la Figura (\ref{fig:fig_1})). Terminan en valores de corriente promedio distintos porque, a mayor factor de forma (corrientes más pulsantes), las pérdidas resistivas aumentan significativamente, haciendo que el diodo alcance su límite térmico con mucha menos corriente media.
+ 
+Finalmente para concluir con este inciso, veamos cómo realizar un montaje para un puente rectificador trifásico de onda completa para una carga resistiva: El circuito a realizar es el siguiente:
+ 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figura 5.png}
+    \caption{Circuito Esquemático de un Puente rectificador trifásico de onda completa para una carga resistiva.}
+    \label{fig:fig_5}
+\end{figure}
+
+La parte principal del montaje sería poder disipar correctamente toda la potencia que emiten los diodos, para ello es necesario realizar el calculo térmico para diseñar correctamente un disipador. Para ello se hace uso del dato de $R_{Th(JC)}$ que entrega el fabricante en su hoja de datos. Por lo general los diodos en esta configuración compartirán un mismo disipador, de modo que este debe ser diseñado considerando esto.
+
+
+
+\subsection{Consigna 2: Comparación de Diodos}
+La idea de esta consigna, consiste en contrastar las diferencias entre un diodo de potencia como lo es el MR850 en comparación a un diodo de pequeña señal como lo es el 1N4148. Para ello, plantearemos una simulación exacta a la ejecutada en el TPT1, donde se busca simular una onda de tensión de pulsos, que varía de $5 \ [V]$ a $-5 \ [V]$ con unos parámetros de tiempo que se asimilen lo más posible a una fuente real (Específicamente el tiempo de subida y de bajada de la fuente al conmutar entre pulsos). La fuente conmuta en $10 \ [\mu s]$ y se queda por $20 \ [\mu s]$ en $-5 \ [V]$ para finalmente volver a $5 \ [V]$. Veamos el circuito a simular:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 6.png}
+    \caption{Simulación en LTSpice de Circuito simple con un diodo.}
+    \label{fig:fig_6}
+\end{figure}
+
+A continuación se presentan las gráficas de tensión y corriente superpuestas para el diodo 1N4148 Durante el momento de conmutación:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 7.png}
+    \caption{Simulación en LTSpice del 1N4148.}
+    \label{fig:fig_7}
+\end{figure}
+
+Se deduce de aquí, que el tiempo de recuperación inversa para el 1N4148, es igual a: $t_{rr(1N4148)} \approx 12,26 [ns]$, el cual es un valor bastante cercano al que provee su hoja de datos:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 8.png}
+    \caption{{\href{https://www.alldatasheet.com/datasheet-pdf/view/26129/VISHAY/1N4148.html}{Hoja de Datos del 1N4148}}}
+    \label{fig:fig_8}
+\end{figure}
+
+Veamos que ocurre si ahora simulamos la misma conmutación del diodo pero para un MR850:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 9.png}
+    \caption{Simulación en LTSpice del MR850.}
+    \label{fig:fig_9}
+\end{figure}
+
+Tal como indican los cursores, se tiene que el tiempo de recuperación inversa para el MR850, es igual a: $t_{rr(MR850)} \approx 90 [ns]$, los cuales nuevamente no se encuentran tan lejos de los valores que provee el fabricante en su hoja de datos:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 10.png}
+    \caption{{\href{https://www.alldatasheet.com/datasheet-pdf/view/26129/VISHAY/1N4148.html}{Hoja de Datos del MR850}}}
+    \label{fig:fig_10}
+\end{figure}
+
+La diferencia entre la hoja de datos y la simulación se debe a que el simulador no siempre tiene los parámetros internos exactos a los que en verdad posee el elemento a simular (en este caso los diodos), sin embargo se encuentran dentro de un rango aceptable.
+
+La diferencia entre ambos valores yace en que son diodos para aplicaciones distintas: El 1N4148, es un diodo diseñado para conmutaciones extremadamente rápidas, mientras que el MR850 se diseño para aplicaciones de potencia (Fuentes DC, Conversores, etc.).
+
+
+
+\section{Conclusiones}
+A lo largo de este informe, se ha investigado sobre un diodo en particular al cual se realizó una investigación profunda sobre su hoja de datos. Luego, mediante herramientas de simulación de circuitos como lo es LTSpice, se realizo una comparativa en la respuesta dinámica de dos tipos de diodos: los diodos de señal a los cuales nos encontramos acostumbrados, y los diodos de potencia los cuales poseen características diferentes pero importantes en aplicaciones relacionadas a la potencia.
+
+\end{document}

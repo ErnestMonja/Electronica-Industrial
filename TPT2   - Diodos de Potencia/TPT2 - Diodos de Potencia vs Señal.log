@@ -1,0 +1,11 @@
+LTspice 24.0.12 for Windows
+Circuit: * C:\Users\Ernesto\Desktop\Ingeniería Electrónica\9- Noveno Semestre\Electrónica Industrial\1- Teórico (Aguero)\1- Trabajos Practicos Teóricos (TPT)\TPT2 - Diodos de Potencia\TPT2 - Diodos de Potencia vs Señal.asc
+Start Time: Tue Mar 17 22:35:24 2026
+solver = Normal
+Maximum thread count: 12
+tnom = 27
+temp = 27
+method = modified trap
+Direct Newton iteration for .op point succeeded.
+Total elapsed time: 0.350 seconds.
+
