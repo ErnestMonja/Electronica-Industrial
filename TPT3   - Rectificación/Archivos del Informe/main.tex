@@ -1,0 +1,314 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{siunitx} % Ángulos
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{minted} % Códigos
+\graphicspath{{Figuras/}}
+\onehalfspacing
+
+
+% Datos
+\author{Nombre y Apellido \\ Legajo: XXXXX}
+\date{\today}
+
+\begin{document}
+
+% Carátula personalizada
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.25\textwidth]{escudo.png} 
+    \hspace{1cm}
+    \includegraphics[width=0.3\textwidth]{download.png} \\[1cm]
+
+    {\large \textbf{UNIVERSIDAD NACIONAL DE CÓRDOBA} \\[0.5cm]}
+    {\large \textbf {FACULTAD DE CIENCIAS EXACTAS, FÍSICAS Y NATURALES} \\[1cm]}
+    {\Large ELECTRÓNICA INDUSTRIAL \\[1cm]}
+
+    \rule{\textwidth}{0.5pt} \\[0.5cm]
+    {\Large \textbf{Trabajo Práctico Teórico N°3} \\[0.3cm]}
+    {\Large \textbf{Rectificación} \\[0.3cm]}
+    \rule{\textwidth}{0.5pt} \\[1cm]
+
+\begin{tabular}{l l}
+\textbf{Profesor Titular:} & Ing. Agüero Adrián.\\
+\textbf{Profesor Adjunto:} & Ing. Gangi O. Sergio.\\
+\textbf{Profesor Adjunto:} & Ing. Laboret Sergio.\\
+
+\\
+\textbf{Alumno:} Monja, Ernesto Joaquín. \\
+\textbf{DNI:} 43.873.728 \\
+\end{tabular}\\[3cm]
+
+{\centering Año 2026 \par}
+
+\end{titlepage}
+
+
+
+% Índice
+\tableofcontents
+\newpage
+\indent
+
+
+
+\section{Introducción}
+En este trabajo práctico se busca investigar y profundizar sobre el análisis de la rectificación polifásica para la electrónica de potencia, para el cual analizaremos y resolveremos integrales para deducir matemáticamente algunos valores de acuerdo al tipo de carga y consecuentemente realizaremos una simulación en LTSpice, para analizar la rectificación hexafásica de media onda con carga resistiva.
+
+
+\section{Desarrollo}
+\subsection{Rectificador trifásico de onda completa con distintas cargas}
+Se propone completar la siguiente tabla comparativa (la cual fue presentada en la consigna de este TP) la cual compara los distintos valores de tensiones, corrientes y potencias de interés del circuito de acuerdo al tipo de carga:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{| c | c | c |} \hline
+        \textbf{Parámetro} & \textbf{Carga Resistiva} & \textbf{Carga Inductiva} \\ \hline
+        \multirow{2}{*}{$I_{F(AV)}$} & \multirow{2}{5cm}{$I_{F(AV)} = \left(\frac{1}{3}\right) I_{L(AV)}$} & \multirow{2}{5cm}{$I_{F(AV)} = \left(\frac{1}{3}\right) I_{L(AV)}$} \\ & & \\ \hline
+        \multirow{2}{*}{$I_{F(RMS)}$} & \multirow{2}{5cm}{$I_{F(RMS)} \approx (0,5778) I_{L(AV)}$} & \multirow{2}{5cm}{$I_{F(RMS)} \approx (0,5773) I_{L(AV)}$} \\ & & \\ \hline
+        \multirow{2}{*}{$V_{RRM}$} & \multirow{2}{5cm}{$V_{RRM} \approx (1,0471) V_{L(AV)}$} & \multirow{2}{5cm}{$V_{RRM} \approx (1,0471)V_{L(AV)}$} \\ & & \\ \hline
+        \multirow{2}{*}{$P_{P}$} & \multirow{2}{5cm}{$P_{P} \approx (1,0481) V_{L(AV)} I_{L(AV)} $} & \multirow{2}{5cm}{$P_{P} \approx (1,0471) V_{L(AV)} I_{L(AV)} $} \\ & & \\ \hline
+        \multirow{2}{*}{$P_{S}$} & \multirow{2}{5cm}{$P_{S} \approx (1,0481) V_{L(AV)} I_{L(AV)}$} & \multirow{2}{5cm}{$P_{S} \approx (1,0471) V_{L(AV)} I_{L(AV)} $} \\ & & \\ \hline
+    \end{tabular}
+    \caption{Análisis de un rectificador trifásico de onda completa con diferentes cargas.}
+    \label{tab:tb_1}
+\end{table}
+
+La tabla en sí, presenta un resumen de un análisis matemático que involucra integrales y definiciones de valores medios y eficaces. Por lo tanto, se propone desarrollar a continuación, dos subapartados en los cuales se profundizará como deducir estos valores de acuerdo al tipo de carga.
+
+\subsubsection{Carga Resistiva}
+Para el caso de una carga resistiva, se tiene que un circuito trifásico rectificador de onda completa, sigue la topología circuital que se muestra en la siguiente figura:
+
+\begin{figure}[H]
+        \centering
+        \includegraphics[width=1.05\linewidth]{Figura 1.png}
+        \caption{Circuito rectificador trifásico de onda completa.}
+        \label{fig:fig_1}
+    \end{figure}
+
+En la figura (\ref{fig:fig_1}) se incluye además las formas de onda tanto de tensión como de corriente en la carga (véase las gráficas de la izquierda), así mismo como las curvas de tensión del secundario y las corrientes del secundario, del primario y del diodo (véase las gráficas de la derecha).
+
+Se tiene que por definición, la corriente $I_{F(AV)}$ es igual a:
+\begin{equation}
+    I_{F(AV)} = \frac{1}{T} \int_{0}^{T} i(t) dt 
+    \label{eq_1}
+\end{equation}
+
+Se tiene que dadas las formas de onda de un sistema rectificador de onda completa, se tiene que la integral se puede tomar como el doble de la que ocurre entre $-\frac{\pi}{6}$ y $\frac{\pi}{6}$, de modo que:
+\begin{equation}
+    I_{F(AV)} = \frac{1}{2 \pi} (2)\int_{-\frac{\pi}{6}}^{\frac{\pi}{6}} I_{S(max)} \cos(\theta) d\theta = \frac{1}{\pi} I_{S(max)} (2)\int_{0}^{\frac{\pi}{6}} \cos(\theta) d\theta
+    \label{eq_2}
+\end{equation}
+\begin{equation}
+     I_{F(AV)} = \frac{2}{\pi} I_{S(max)} \left[ \sin(\theta)\right]_{0}^{\frac{\pi}{6}} = \frac{2}{\pi} I_{S(max)} \left[\frac{1}{2} - 0\right]
+    \label{eq_3}
+\end{equation}
+\begin{equation}
+     I_{F(AV)} = \frac{1}{\pi} I_{S(max)}
+    \label{eq_4}
+\end{equation}
+
+Luego, dado que buscamos saber cuando depende $I_{F(AV)}$ en función de $I_{L(AV)} = I_{0}$, buscaremos definir entonces a $I_{L(AV)}$ como:
+\begin{equation}
+    I_{L(AV)} = \frac{1}{\frac{2\pi}{6}} (2)\int_{0}^{\frac{\pi}{6}} I_{S(max)} \cos(\theta) d\theta = \frac{6}{\pi} I_{S(max)} \left[ \sin(\theta)\right]_{0}^{\frac{\pi}{6}}
+    \label{eq_5}
+\end{equation}
+\begin{equation}
+    I_{L(AV)} = \frac{6}{\pi} I_{S(max)} \left[\frac{1}{2} - 0\right] = \frac{3}{\pi} I_{S(max)}
+    \label{eq_6}
+\end{equation}
+
+Se tiene entonces que de la ecuación (\ref{eq_6}), se puede despejar a $I_{S(max)}$ y expresarlo en función de $I_{L(AV)}$ de modo tal que a eso lo reemplazo en la ecuación (\ref{eq_4}), tal que:
+\begin{equation}
+    I_{F(AV)} = \frac{1}{\pi} I_{S(max)} = \frac{1}{\pi} \left(\frac{\pi}{3}\right) I_{L(AV)} = \left(\frac{1}{3}\right) I_{L(AV)}
+    \label{eq_7}
+\end{equation}
+
+Continuando con el desarrollo, se tiene que por definición del valor eficaz de la corriente directa del diodo, esta es igual a:
+\begin{equation}
+    I_{F(RMS)} = \sqrt{\frac{1}{T} \int_{0}^{T} i^{2}(t)dt}
+    \label{eq_8}
+\end{equation}
+
+Nuevamente, bajo la misma idea de que la forma de onda se repite 2 veces dado el rectificador trifásico de onda completa, se puede multiplicar la integral por 2 asumiendo que esta centrada en 0 y se integra entre $-\frac{\pi}{6}$ y $\frac{\pi}{6}$, de modo que la ecuación (\ref{eq_8}) queda igual a la siguiente expresión:
+\begin{equation}
+    I_{F(RMS)} = \sqrt{\frac{1}{2\pi} (2) \int_{-\frac{\pi}{6}}^{\frac{\pi}{6}} I^{2}_{S(max)} \cos^{2}(\theta) d\theta} = I_{S(max)} \sqrt{\frac{2}{\pi} \int_{0}^{\frac{\pi}{6}} \left(\frac{1 + \cos(2\theta)}{2} \right)d\theta}
+    \label{eq_9}
+\end{equation}
+\begin{equation}
+    I_{F(RMS)} = I_{S(max)} \sqrt{\frac{1}{\pi} \left[ \theta + \frac{1 + \sin(2\theta)}{2}\right]_{0}^{\frac{\pi}{6}}} = I_{S(max)} \sqrt{\frac{1}{\pi} \left(\frac{\pi}{6} + \frac{\sqrt{3}}{4}\right)}
+    \label{eq_10}
+\end{equation}
+\begin{equation}
+    I_{F(RMS)} = I_{S(max)} \sqrt{\frac{1}{6} + \frac{\sqrt{3}}{4\pi}}
+    \label{eq_11}
+\end{equation}
+
+Se tiene nuevamente que despejando $I_{S(max)}$ de la ecuación (\ref{eq_6}) y reemplazando ese resultado en la ecuación (\ref{eq_11}), se deduce finalmente que:
+\begin{equation}
+    I_{F(RMS)} = \frac{\pi}{3} \sqrt{\frac{1}{6} + \frac{\sqrt{3}}{4\pi}} I_{L(AV)} \approx (0,5778)I_{L(AV)}
+    \label{eq_12}
+\end{equation}
+
+Para calcular la $V_{RRM}$, partimos sabiendo que esta es igual a: $V_{RRM} = \sqrt{3} V_{S(max)}$ y de aquí, podemos plantear la definición de la tensión $V_{L(AV)}$ en términos de la tensión $V_{S(max)}$, de modo que:
+\begin{equation}
+    V_{L(AV)} = \frac{1}{T} \int_{0}^{T} V_S(t) dt = \frac{1}{\frac{2\pi}{6}} \int_{-\frac{\pi}{6}}^{\frac{\pi}{6}} \sqrt{3} V_{S(max)} \cos(\theta) d\theta
+    \label{eq_13}
+\end{equation}
+\begin{equation}
+    V_{L(AV)} = \frac{6\sqrt{3}}{2\pi} (2) V_{S(max)} \int_{0}^{\frac{\pi}{6}} \cos(\theta) d\theta = \frac{3\sqrt{3}}{\pi} V_{S(max)} \left[\sin(\theta)\right]_{0}^{\frac{\pi}{6}}
+    \label{eq_14}
+\end{equation}
+\begin{equation}
+    V_{L(AV)} = \frac{6\sqrt{3}}{\pi} V_{S(max)} \left(\frac{1}{2}-0\right) = \frac{3\sqrt{3}}{\pi} V_{S(max)}
+    \label{eq_15}
+\end{equation}
+
+Se deduce entonces que reemplazando la expresión deducida de la relación entre $V_{RRM}$ y $V_{S(max)}$ con lo encontrado en la ecuación (\ref{eq_15}), se tiene que:
+\begin{equation}
+    V_{RRM} = \sqrt{3} \frac{\pi}{3\sqrt{3}} V_{L(AV)} = \frac{\pi}{3} V_{L(AV)} \approx (1,0471)V_{L(AV)}
+    \label{eq_16}
+\end{equation}
+
+Ya que venimos trabajando con valores del secundario del transformadores, calculemos ahora la potencia del secundario $P_{S}$, la cual estará dada por la siguiente fórmula: $P_{S} = 3 V_{S(RMS)} I_{S(RMS)}$ de donde se deduce rápidamente que:
+\begin{equation}
+    I_{S(RMS)} = \sqrt{\frac{1}{2\pi} 4 \int_{-\frac{\pi}{6}}^{\frac{\pi}{6}} I^{2}_{S(max)} \cos^{2}(\theta) d\theta} = ... = \frac{\pi}{3} \sqrt{\frac{1}{3} + \frac{\sqrt{3}}{2\pi}} I_{L(AV)}
+    \label{eq_17}
+\end{equation}
+
+Luego, se tiene que la tensión $V_{S(RMS)} = \frac{1}{\sqrt{2}} V_{S(max)}$ donde $V_{S(max)}$ se deduce en términos de $V_{L(AV)}$ de la ecuación (\ref{eq_15}) de modo que:
+\begin{equation}
+    P_{S} = 3 \left(\frac{\pi}{3\sqrt{6}} V_{L(AV)}\right) \left(\frac{\pi}{3} \sqrt{\frac{1}{3} + \frac{\sqrt{3}}{2\pi}} I_{L(AV)}\right)
+    \label{eq_18}
+\end{equation}
+\begin{equation}
+    P_{S} = \frac{\pi^2}{3\sqrt{6}}\sqrt{\frac{1}{3} + \frac{\sqrt{3}}{2\pi}} V_{L(AV)} I_{L(AV)} \approx (1,0481) V_{L(AV)} I_{L(AV)}
+    \label{eq_19}
+\end{equation}
+
+Para concluir este apartado, se tiene que la Potencia del Primario $P_{P}$ es igual a la Potencia del Secundario $P_{S}$. Esto se debe a que la corriente del primario no tiene componente de continua, y al reflejarse el primario a través de la relación de transformación $n = \frac{V_{S}}{V_{P}}$,la forma de onda se mantiene idéntica, de modo tal que:
+\begin{equation}
+    P_{P} = 3 V_{P(rms)} I_{P(rms)} = 3(nV_{S(rms)})\left(\frac{I_{S(rms)}}{n}\right) = 3 V_{S(rms)} I_{S(rms)} = P_{S}
+    \label{eq_20}
+\end{equation}
+
+
+
+\subsubsection{Carga Inductiva}
+Para el caso de una carga inductiva, se tiene que un circuito trifásico rectificador de onda completa, sigue la topología circuital que se muestra en la siguiente figura:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.05\linewidth]{Figura 2.png}
+    \caption{Circuito rectificador trifásico de onda completa con carga inductiva.}
+    \label{fig:fig_2}
+\end{figure}
+En la figura (\ref{fig:fig_2}) se incluye además las formas de onda tanto de tensión como de corriente en la carga (véase las gráficas de la izquierda), así mismo como las curvas de tensión del secundario y las corrientes del secundario, del primario y del diodo (véase las gráficas de la derecha).
+
+Los cálculos en esta sección serán bastante reducidos ya que se pueden reutilizar gran parte del análisis hecho para la carga resistiva. 
+
+Comenzando por la corriente $I_{F(AV)}$, se tiene que al no haber componentes de alterna (véase la Figura (\ref{fig:fig_2})), se cumple entonces que los valores eficaces y medios son iguales, y por lo tanto, se tiene que combinando los resultados de las ecuaciones (\ref{eq_4}) y (\ref{eq_6}), se vuelve a llegar al mismo resultado para $I_{F(AV)}$ de la ecuación (\ref{eq_7}), donde se demostró que:
+\begin{equation}
+    I_{F(AV)} = \left(\frac{1}{3}\right) I_{L(AV)} 
+    \label{eq_21}
+\end{equation}
+
+La corriente $I_{F(RMS)}$ se deduce planteando una integral similar donde se multiplica por 2 a la integral, debido a que la fase conduce tanto en el semiciclo positivo y negativo. Por lo tanto, se deduce que:
+\begin{equation}
+    I_{F(RMS)} = \sqrt{\frac{1}{2\pi} \int_{0}^{\frac{2\pi}{3}} I^{2}_{L(AV)}d\theta} = I_{L(AV)} \sqrt{\frac{1}{2\pi} \frac{2\pi}{3}} = \frac{1}{\sqrt{3}} I_{L(AV)} \approx (0,5773) I_{L(AV)}
+    \label{eq_22}
+\end{equation}
+
+La tensión $V_{RRM}$ seguirá siendo igual a: $V_{RRM} = \sqrt{3} V_{S(max)}$ y dado que las tensiones en el secundario seguirán siendo iguales independientemente de la carga, todavía se sigue cumpliendo la ecuación (\ref{eq_15}) y consecuentemente la ecuación (\ref{eq_16}), de modo que:
+\begin{equation}
+    V_{RRM} = \frac{\pi}{3} V_{L(AV)} \approx (1,0471)V_{L(AV)}
+    \label{eq_23}
+\end{equation}
+
+Nuevamente la potencia del primario $P_{P}$ será igual a la potencia del secundario $P_{S}$ y ambas se calculan de la siguiente forma: $P_{S} = 3 V_{S(RMS)} I_{S(RMS)}$ donde nuevamente las tensiones del secundario se mantienen (véase ecuación (\ref{eq_18}) en el término correspondiente a $V_{S(RMS)}$) y la corriente eficaz del secundario está dada por:
+\begin{equation}
+    I_{S(RMS)} = \sqrt{\frac{1}{2\pi} 2\int_{0}^{\frac{2\pi}{3}} I^{2}_{L(AV)}d\theta} = I_{L(AV)} \sqrt{\frac{1}{\pi} \frac{2\pi}{3}} = \sqrt{\frac{2}{3}} I_{L(AV)}
+    \label{eq_24}
+\end{equation}
+
+Por lo tanto las potencias serán iguales a:
+\begin{equation}
+    P_{P} = P_{S} = 3 \left(\frac{\pi}{3\sqrt{6}} V_{L(AV)}\right) \left(\sqrt{\frac{2}{3}} I_{L(AV)}\right) = \frac{\pi}{3} V_{L(AV)} I_{L(AV)} \approx (1,0471) V_{L(AV)} I_{L(AV)}
+    \label{eq_24}
+\end{equation}
+
+
+
+\subsubsection{Conclusión Parcial}
+El rectificador trifásico de onda completa presenta un rendimiento superior a los sistemas monofásicos y de media onda. En el análisis comparativo, se observa que la inclusión de una carga inductiva estabiliza la corriente de la carga $I_{L(AV)}$, mejorando levemente la utilización del transformador y reduciendo el ripple de la señal a un mínimo a tal punto de que generar una ausencia de la componente de continua.
+
+
+
+\subsubsection{Montaje para Carga Resistiva en una Aplicación de Potencia}
+Suponiendo que se continua el análisis de un circuito rectificador trifásico de onda completa, se tiene que para el montaje de la carga resistiva, debemos primero determinar que diodos utilizar. Para ello es fundamental remitirse a los conceptos estudiados en el \href{https://github.com/ErnestMonja/Electronica-Industrial/blob/main/TPT2%20%20%20-%20Diodos%20de%20Potencia/Monja_TPT2_EI2026.pdf}{Trabajo Práctico del Teórico N°2}, donde se recuerda que los diodos son elegidos de acuerdo a los valores de la máxima tensión inversa soportada y la máxima corriente directa conducida. 
+
+Es muy importante también determinar el encapsulado a utilizar del diodo, ya que de este dependerán las características térmicas del mismo y consecuentemente se determinará la necesidad (o no) de introducir un disipador. Para este caso, podríamos esperar un esquema de conexión como el que se muestra en la siguiente figura:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 3.png}
+    \caption{Implementación real de un circuito rectificador trifásico de onda completa.}
+    \label{fig:fig_3}
+\end{figure}
+
+Aquí, se implementaron los 6 diodos necesarios para la rectificación de onda completa donde se observa un encapsulado de diodo tipo perno, el cual se enrosca un terminal al disipador mediante un torquimetro, ya que de no generarse un buen contacto galvánico entre el diodo-disipador, se pueden producir arcos de corriente; y el otro terminal se conecta a las barras de cobre donde de allí se realizará una conexión con el terminal positivo y negativo de la carga resistiva pura en este caso
+
+Finalmente podemos determinar los factores de utilización tanto del primario como del secundario de acuerdo a las potencias en juego de nuestro circuito rectificador, de modo que podamos tener un buen criterio para elegir un transformador trifásico.
+
+
+
+\subsection{Simulación de Rectificación Hexafásica de Media Onda con Carga Resistiva}
+En esta sección, se propone realizar una simple simulación en LTSpice del siguiente circuito: 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 4.png}
+    \caption{Simulación en LTSpice de un rectificador hexafásico de onda completa.}
+    \label{fig:fig_4}
+\end{figure}
+
+Para esta simulación, se opto por utilizar un modelo de diodo de potencia diseñado cautelosamente para que actúe como un diodo de potencia, mientras que las fuentes de tensión se plantearon como senoidales puras desfasadas $60 \ [°]$ cada una para emular el efecto de un rectificador hexafásico, de modo que las tensiones observadas son:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 5.png}
+    \caption{Formas de onda de la tensión de las fuentes.}
+    \label{fig:fig_5}
+\end{figure}
+
+Se presenta entonces una gráfica que simula tanto la tensión como la corriente a través del diodo, como la tensión y corriente a través de la carga, donde se puede ver el efecto de la rectificación hexafásica:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 6.png}
+    \caption{Formas de onda de la tensión y corriente a través del diodo $D_{1}$ como de la carga.}
+    \label{fig:fig_6}
+\end{figure}
+
+Finalmente, veamos como se ve la tensión de pico inversa a través del diodo $D_{1}$ la cual se espera que sea el doble de la tensión pico de la onda, es decir: $VPI = 2V_S(max) \approx 1047 \ [V]$ tal que:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 7.png}
+    \caption{Formas de onda de la tensión de pico inversa a través del diodo $D_{1}$.}
+    \label{fig:fig_7}
+\end{figure}
+
+
+
+\section{Conclusión}
+A lo largo de este informe, se ha realizado un extenso análisis del cálculo de variables fundamentales para los circuitos rectificadores de onda completa ya sean para carga resistiva como inductiva, para los cuales se analizaron las ventajas y desventajas de utilizar tales filtros de forma teórica. Luego se investigo un poco sobre como se realiza el montaje de los componentes de potencia y que consideraciones se deben tener en cuenta para contemplar correctamente la posibilidad de tener un disipador. Finalmente se estudio en una simulación de LTSpice, como simular y medir parámetros de interés de un circuito rectificador hexafásico de media onda con carga resistiva.
+
+\end{document}
