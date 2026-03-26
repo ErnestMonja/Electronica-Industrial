@@ -149,7 +149,7 @@ Nuevamente, bajo la misma idea de que la forma de onda se repite 2 veces dado el
     \label{eq_9}
 \end{equation}
 \begin{equation}
-    I_{F(RMS)} = I_{S(max)} \sqrt{\frac{1}{\pi} \left[ \theta + \frac{1 + \sin(2\theta)}{2}\right]_{0}^{\frac{\pi}{6}}} = I_{S(max)} \sqrt{\frac{1}{\pi} \left(\frac{\pi}{6} + \frac{\sqrt{3}}{4}\right)}
+    I_{F(RMS)} = I_{S(max)} \sqrt{\frac{1}{\pi} \left[ \theta + \frac{\sin(2\theta)}{2}\right]_{0}^{\frac{\pi}{6}}} = I_{S(max)} \sqrt{\frac{1}{\pi} \left(\frac{\pi}{6} + \frac{\sqrt{3}}{4}\right)}
     \label{eq_10}
 \end{equation}
 \begin{equation}
@@ -183,13 +183,13 @@ Se deduce entonces que reemplazando la expresión deducida de la relación entre
     \label{eq_16}
 \end{equation}
 
-Ya que venimos trabajando con valores del secundario del transformador, calculemos ahora la potencia del secundario $P_{S}$, la cual estará dada por la siguiente fórmula: $P_{S} = 3 V_{S(RMS)} I_{S(RMS)}$ de donde se deduce rápidamente que:
+Ya que venimos trabajando con valores del secundario del transformador, calculemos ahora la potencia del secundario $P_{S}$, la cual estará dada por la siguiente fórmula: $P_{S} = 3 V_{S(RMS)} I_{S(RMS)}$ de donde se deduce que gracias a la figura (\ref{fig:fig_1}), que la $I_{S(RMS)}$ se puede tomar como 4 veces el valor de la integral del coseno al cuadrado desde $-\frac{\pi}{6}$ a $\frac{\pi}{6}$ es decir:
 \begin{equation}
     I_{S(RMS)} = \sqrt{\frac{1}{2\pi} 4 \int_{-\frac{\pi}{6}}^{\frac{\pi}{6}} I^{2}_{S(max)} \cos^{2}(\theta) d\theta} = ... = \frac{\pi}{3} \sqrt{\frac{1}{3} + \frac{\sqrt{3}}{2\pi}} I_{L(AV)}
     \label{eq_17}
 \end{equation}
 
-Luego, se tiene que la tensión $V_{S(RMS)} = \frac{1}{\sqrt{2}} V_{S(max)}$ donde $V_{S(max)}$ se deduce en términos de $V_{L(AV)}$ de la ecuación (\ref{eq_15}) de modo que:
+Se omite la resolución, ya que es bastante similar a la planteada para $I_{F(RMS)}$ (véase la ecuación (\ref{eq_9})) pero aquí se multiplica por 4 y no por 2 a la integral. Luego, se tiene que la tensión $V_{S(RMS)} = \frac{1}{\sqrt{2}} V_{S(max)}$ donde $V_{S(max)}$ se deduce en términos de $V_{L(AV)}$ de la ecuación (\ref{eq_15}) de modo que:
 \begin{equation}
     P_{S} = 3 \left(\frac{\pi}{3\sqrt{6}} V_{L(AV)}\right) \left(\frac{\pi}{3} \sqrt{\frac{1}{3} + \frac{\sqrt{3}}{2\pi}} I_{L(AV)}\right)
     \label{eq_18}
@@ -239,7 +239,7 @@ La tensión $V_{RRM}$ seguirá siendo igual a: $V_{RRM} = \sqrt{3} V_{S(max)}$ y
 
 Nuevamente la potencia del primario $P_{P}$ será igual a la potencia del secundario $P_{S}$ y ambas se calculan de la siguiente forma: $P_{S} = 3 V_{S(RMS)} I_{S(RMS)}$ donde nuevamente las tensiones del secundario se mantienen (véase ecuación (\ref{eq_18}) en el término correspondiente a $V_{S(RMS)}$) y la corriente eficaz del secundario está dada por:
 \begin{equation}
-    I_{S(RMS)} = \sqrt{\frac{1}{2\pi} 2\int_{0}^{\frac{2\pi}{3}} I^{2}_{L(AV)}d\theta} = I_{L(AV)} \sqrt{\frac{1}{\pi} \frac{2\pi}{3}} = \sqrt{\frac{2}{3}} I_{L(AV)}
+    I_{S(RMS)} = \sqrt{\frac{1}{2\pi} 2\int_{0}^{\frac{2\pi}{3}} I^{2}_{L(AV)}d\theta} = I_{L(AV)} \sqrt{\frac{1}{\pi} \left(\frac{2\pi}{3}\right)}  = \sqrt{\frac{2}{3}} I_{L(AV)}
     \label{eq_24}
 \end{equation}
 
@@ -277,7 +277,7 @@ Finalmente podemos determinar los factores de utilización tanto del primario co
 En esta sección, se propone realizar una simple simulación en LTSpice del siguiente circuito: 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{Figura 4.png}
+    \includegraphics[width=1\linewidth]{Figura 4.png}
     \caption{Simulación en LTSpice de un rectificador hexafásico de media onda.}
     \label{fig:fig_4}
 \end{figure}
@@ -298,7 +298,7 @@ Se presenta entonces una gráfica que simula tanto la tensión como la corriente
     \label{fig:fig_6}
 \end{figure}
 
-Finalmente, veamos como se ve la tensión de pico inversa a través del diodo $D_{1}$ la cual se espera que sea el doble de la tensión pico de la onda, es decir: $VPI = 2V_S(max) \approx 1047 \ [V]$ tal que:
+Finalmente, veamos como se ve la tensión de pico inversa a través del diodo $D_{1}$ la cual se espera que sea el doble de la tensión pico de la onda, es decir: $VPI = 2V_S(max) \approx 1047 \ [V]$  debido a que se trata de un sistema de rectificación con número par de fases, de modo que:
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{Figura 7.png}
