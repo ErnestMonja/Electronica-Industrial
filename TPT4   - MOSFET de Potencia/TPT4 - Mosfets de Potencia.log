@@ -1,0 +1,14 @@
+LTspice 24.0.12 for Windows
+Circuit: * C:\Users\Ernesto\Desktop\Ingeniería Electrónica\9- Noveno Semestre\Electrónica Industrial\1- Trabajos Prácticos\2- Trabajos Prácticos del Teórico (TPT)\TPT4 - MOSFET de Potencia\TPT4 - Mosfets de Potencia.asc
+Start Time: Mon Mar 30 14:16:06 2026
+solver = Normal
+Maximum thread count: 12
+tnom = 27
+temp = 27
+method = modified trap
+WARNING: Specified period is not longer than the sum of Trise, Tfall, and Ton for v_gs.  Increasing period to 1
+Limiting rise time of source v_gs to 1.9984e-16
+Limiting fall time of source v_gs to 1.9984e-16
+Direct Newton iteration for .op point succeeded.
+Total elapsed time: 0.337 seconds.
+
