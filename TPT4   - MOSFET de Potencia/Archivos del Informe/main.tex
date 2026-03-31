@@ -73,6 +73,7 @@ En este trabajo práctico se busca investigar sobre los MOSFETS de potencia exis
 \subsection{Lectura de Hojas de Datos}
 \subsubsection{Aplicación al MOSFET IRF840}
 El transistor de potencia elegido para este apartado es el IRF840 encapsulado SOT78 (TO220AB), el cual ya fue utilizado en el \href{https://github.com/ErnestMonja/Electronica-Industrial/blob/main/TPT1%20%20%20-%20Introducci%C3%B3n%20a%20la%20Electr%C3%B3nica%20de%20Potencia/Monja_TPT1_EI2026.pdf}{Trabajo Práctico N°1} de esta asignatura. Si revisamos su hoja de datos en internet, podemos encontrar las siguientes tablas:
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\linewidth]{Figura 1.png}
@@ -85,6 +86,7 @@ El transistor de potencia elegido para este apartado es el IRF840 encapsulado SO
     \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/17804/PHILIPS/IRF840.html}{Tabla 1 de la hoja de datos del IRF840.}}
     \label{fig:fig_2}
 \end{figure}
+
 De aquí se deducen los siguientes valores:
 \begin{itemize}
     \item \underline{Corriente de Drenador ($I_{D}$):} El fabricante provee 3 valores máximos:
@@ -113,6 +115,7 @@ De aquí se deducen los siguientes valores:
 
      \item \underline{Potencia Disipada ($P_{D}$):} Se trata de la potencia máxima que el componente puede disipar en forma de calor antes de quemarse y es igual a: $P_{D} = 147 \ [W]$ con una $T_{mb} = 25 \ [°C]$.
 \end{itemize}
+
 Si exploramos más, se encuentra tambien las gráficas de Área de Operación Segura (o Safe Operation Area del acrónimo del inglés) la cual se presenta a continuación:
 \begin{figure}[H]
     \centering
@@ -120,6 +123,7 @@ Si exploramos más, se encuentra tambien las gráficas de Área de Operación Se
     \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/17804/PHILIPS/IRF840.html}{SOA del IRF840.}}
     \label{fig:fig_3}
 \end{figure}
+
 Finalmente se identifican las curvas de capacidades parásitas de entrada ($C_{iss}$), salida ($C_{oss}$) y de realimentación ($C_{rss}$) las cuales se presentan a continuación:
 \begin{figure}[H]
     \centering
@@ -127,12 +131,14 @@ Finalmente se identifican las curvas de capacidades parásitas de entrada ($C_{i
     \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/17804/PHILIPS/IRF840.html}{Capacidades parásitas del IRF840.}}
     \label{fig:fig_4}
 \end{figure}
+
 Aquí se tienen que:
 \begin{itemize}
     \item \underline{Capacidad de Entrada ($C_{iss} = C_{GS} + C_{GD}$):} Es la más alta de todas en valor nominal y determina la rapidez con la que puede encenderse el MOSFET, ya que antes de tener una tensión $V_{GS}$, se debe cargar este capacitor.
     \item \underline{Capacidad de Salida ($C_{oss} = C_{DS} + C_{GD}$):} Se trata de la capacidad de salida del transistor y resulta importante para calcular las pérdidas en la conmutación.
     \item \underline{Capacidad de Transferencia Inversa ($C_{rss} = C_{GD}$):} También conocida como la capacitancia de Miller, es la más crítica ya que retroalimenta la salida con la entrada durante la conmutación, frenando así la conmutación.
 \end{itemize}
+
 Se observa que las capacidades parásitas disminuyen al aumentar la tensión drenador-surtidor ($V_{DS}$). Esto se debe al ensanchamiento de las zonas de deplexión internas del semiconductor. La capacidad de entrada ($C_{iss}$) es la más estable, mientras que la de salida ($C_{oss}$) y transferencia ($C_{rss}$) muestran una dependencia no lineal muy marcada, reduciendo su valor significativamente a voltajes altos, lo que favorece menores tiempos de conmutación en regímenes de alta tensión.
 
 
@@ -144,6 +150,7 @@ En esta consigna, se ha podido identificar satisfactoriamente de la hoja de dato
     \item Se ha identificado la gráfica de Área de Operación Segura.
     \item Se ha identificado la gráfica de las capacidades parásitas del MOSFET, se ha explicado su significado y también el motivo de su variación.
 \end{itemize}
+
 Por lo tanto se da como concluida, esta primera parte del este Trabajo Práctico.
 
 
@@ -157,6 +164,7 @@ En esta sección, se propone realizar una simulación en LTSpice del siguiente c
     \caption{Simulación en LTSpice de la conmutación de un IRF150.}
     \label{fig:fig_5}
 \end{figure}
+
 Dado que no se contaba con el modelo del IRF150 en LTSpice, se opto por tomar el modelo de LTSpice propuesto por \href{https://github.com/drahnr/oregano/blob/master/data/models/IRF150.model}{Bernhard Schuster} (Véase el hipervínculo dentro del nombre). De esta simulación, se pueden obtener las siguientes gráficas:
 \begin{figure}[H]
     \centering
@@ -164,6 +172,7 @@ Dado que no se contaba con el modelo del IRF150 en LTSpice, se opto por tomar el
     \caption{Simulación en LTSpice de la conmutación de un IRF150.}
     \label{fig:fig_6}
 \end{figure}
+
 Aquí se identifican:
 \begin{itemize}
     \item \underline{Curva de Tensión Compuerta-Surtidor ($V_{GS}$):} Como la curva verde.
@@ -171,19 +180,20 @@ Aquí se identifican:
     \item \underline{Curva de Potencia en la Conmutación ($P_{D}$):} Como la curva roja.
 \end{itemize}
 
-Si investigamos un poco mas sobre la curva de la tensión compuerta-surtidor, podemos identificar los tiempos característicos de la conmutación del MOSFET:
+Si graficamos la curva de $V_{GS}$ (en verde) y la curva de $V_{DS}$ (en azul), se podrán identificar los tiempos característicos de la conmutación del MOSFET:
 \begin{itemize}
     \item \underline{Tiempo de Retraso de Encendido ($t_{d(on)}$) y Tiempo de Subida ($t_{r}$):} Se presenta a continuación 2 imágenes compiladas en una, donde: a la izquierda se tiene una medición del $t_{d(on)} \approx 117.92 \ [ns]$ y a la derecha se tiene una medición del $t_{r} \approx 445.03 \ [ns]$ tal como se ve en la siguiente gráfica:
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\linewidth]{Figura 7.png}
+        \includegraphics[width=0.9\linewidth]{Figura 7.png}
         \caption{Simulación en LTSpice de la conmutación de un IRF150.}
         \label{fig:fig_7}
     \end{figure}
+    
     \item \underline{Tiempo de Retraso de Apagado ($t_{d(off)}$) y Tiempo de Caída ($t_{f}$):} Se presenta a continuación 2 imágenes compiladas en una, donde: a la izquierda se tiene una medición del $t_{d(off)} \approx 197.84 \ [ns]$ y a la derecha se tiene una medición del $t_{f} \approx 695.68 \ [ns]$ tal como se ve en la siguiente gráfica:
     \begin{figure}[H]
         \centering
-        \includegraphics[width=0.8\linewidth]{Figura 8.png}
+        \includegraphics[width=0.9\linewidth]{Figura 8.png}
         \caption{Simulación en LTSpice de la conmutación de un IRF150.}
         \label{fig:fig_8}
     \end{figure}
@@ -201,9 +211,11 @@ En cuanto a la medición de los tiempos característicos del MOSFET, se tiene qu
     \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/37003/SAMSUNG/IRF150.html}{Tabla 2 de la hoja de datos del IRF150.}}
     \label{fig:fig_9}
 \end{figure}
+
 Esto se debe principalmente a que el fabricante provee un entorno de trabajo distinto al utilizado para obtener estas mediciones, es decir que el fabricante midió estos tiempos con distintos valores de tensiones, corrientes, etc. los cuales indudablemente afectarán a los resultados de las simulaciones realizadas. No tan solo eso, sino que se debe considerar que el modelo utilizado en LTSpice no siempre es exacto al modelo real del MOSFET. Estas consideraciones explican la diferencia entre valores simulados y reales del IRF150.
 
 \section{Bibliografía}
+
 \begin{itemize}
     \item \href{https://www.alldatasheet.com/datasheet-pdf/view/17804/PHILIPS/IRF840.html}{Hoja de datos del IRF840.}
     \item \href{https://github.com/drahnr/oregano/blob/master/data/models/IRF150.model}{Repositorio de Bernhard Schuster con el Modelo de LTSpice del IRF150.}
