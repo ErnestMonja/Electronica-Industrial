@@ -1,0 +1,298 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{siunitx} % Ángulos
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{minted}  % Códigos
+\usepackage{gensymb} % Grados: "°"
+\graphicspath{{Figuras/}}
+\onehalfspacing
+
+
+% Datos
+\author{Nombre y Apellido \\ Legajo: XXXXX}
+\date{\today}
+
+\begin{document}
+
+% Carátula personalizada
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.25\textwidth]{escudo.png} 
+    \hspace{1cm}
+    \includegraphics[width=0.3\textwidth]{download.png} \\[1cm]
+
+    {\large \textbf{UNIVERSIDAD NACIONAL DE CÓRDOBA} \\[0.5cm]}
+    {\large \textbf {FACULTAD DE CIENCIAS EXACTAS, FÍSICAS Y NATURALES} \\[1cm]}
+    {\Large ELECTRÓNICA INDUSTRIAL \\[1cm]}
+
+    \rule{\textwidth}{0.5pt} \\[0.5cm]
+    {\Large \textbf{Trabajo Práctico Teórico N°5} \\[0.3cm]}
+    {\Large \textbf{Circuito de disparo para MOSFETs} \\[0.3cm]}
+    \rule{\textwidth}{0.5pt} \\[1cm]
+
+\begin{tabular}{l l}
+\textbf{Profesor Titular:} & Ing. Agüero Adrián.\\
+\textbf{Profesor Adjunto:} & Ing. Gangi O. Sergio.\\
+\textbf{Profesor Adjunto:} & Ing. Laboret Sergio.\\
+
+\\
+\textbf{Alumno:} Monja, Ernesto Joaquín. \\
+\textbf{DNI:} 43.873.728 \\
+\end{tabular}\\[3cm]
+
+{\centering Año 2026 \par}
+
+\end{titlepage}
+
+
+
+% Índice
+\tableofcontents
+\newpage
+\indent
+
+
+
+\section{Introducción}
+En este trabajo práctico se busca investigar sobre los circuitos de disparo de MOSFETS de potencia, estudiando un caso particular el cual se presenta mas adelante. Se buscó comprender el funcionamiento del circuito, elegir componentes de acuerdo a los datos y simularlo para verificar su correcto funcionamiento.
+
+
+
+\section{Desarrollo}
+\subsection{Funcionamiento, partes y formas de onda características del circuito}
+El circuito al que realizaremos el estudio es el que se presenta en la siguiente figura:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figura 1.png}
+    \caption{Circuito de Disparo de MOSFETs.}
+    \label{fig:fig_1}
+\end{figure}
+
+El circuito presentado en esta figura se trata de un conversor DC-DC de tipo Push-Pull, para el cual se busca transformar la señal de un nivel de continua dado por $V_{cc} = 24 \ [V]$ hasta una tensión de salida de valor $V_{out} = 600 \ [V]$. Vemos que la existencia de un transformador y unos diodos, nos indican la presencia de una señal de tensión alterna, por lo tanto resulta fundamental entender el funcionamiento de todas las partes que componen a este circuito y para ello se propone realizar una explicación detallada a continuación:
+\begin{itemize}
+    \item \underline{El Capacitor $C_{1}:$} Se observa que inmediatamente luego de la fuente de valor $V_{CC}$ se encuentra el capacitor $C_{1}$. Se trata de un capacitor de filtro a la entrada para estabilizar la tensión de alimentación y quitarle cualquier posible ripple.
+    
+    \item \underline{Los MOSFETs $M_{1}$ y $M_{2}$:} Estos MOSFETS actúan como interruptores electrónicos comandados por un circuito de disparo, el cual alimenta a las señales en las compuertas de ambos transistores en $G_{1}$ y $G_{2}$.
+    
+    La idea principal consiste en que el circuito de mando envía pulsos de tensión desfasados $180 \ [\degree]$, de modo que en ningún momento se pueda tener a ambos MOSFETs en conducción. Supongamos entonces que un pulso positivo llega a $G_{2}$, de modo que $M_{2}$ conduce y por lo tanto la tensión de $V_{CC}$ genera una corriente que circula a través de la mitad inferior del primario del transformador hasta la masa que provee $M_{2}$ al conducir, de modo que esta corriente magnetizará al núcleo del transformador en un sentido dado.
+    
+    Dada la premisa de que nunca conducirán los 2 MOSFETs en simultáneo, se tiene que cuando el pulso positivo llega a $G_{1}$ y por lo tanto $M_{1}$ conduce, se tiene que $G_{2}$ no recibe tensión y el transistor $M_{2}$ entra en bloqueo. Esto generará que la corriente ahora se derive a masa pero a través de la mitad superior del primario del transformador hasta la masa que ahora le provee $M_{1}$ al conducir, magnetizando así al núcleo del transformador en un sentido opuesto al visto en el párrafo anterior.
+
+    \item \underline{El Transformador de Punto Medio:} La alternancia en la conducción de los MOSFETs generará una corriente alterna de onda cuadrada en el primario del transformador representado en la Figura \ref{fig:fig_1} como $L_{P1}$ Y $L_{P2}$. Esta corriente genera a su vez un flujo magnético variable a través del primario del transformador el cual será reflejado al secundario según una relación de espiras, afectando a los parámetros eléctricos del circuito tales como tensión y corrientes. La idea de este transformador consiste no solo en proveer una aislación galvánica sino también un mecanismo para elevar la tensión a los valores deseados.
+
+    \item \underline{El Puente de Diodos con $D_{1}$, $D_{2}$, $D_{3}$ y $D_{4}$:} Dado que a la salida del transformador seguiremos teniendo una señal de alterna, se busca rectificarla mediante un puente de diodos implementado por $D_{1}$, $D_{2}$, $D_{3}$ y $D_{4}$.
+
+    \item \underline{El Filtro LC de $L_{1}$ y $C_{2}$:} Si bien la señal ya ha sido rectificada con el puente de diodos, esta todavía contiene un alto porcentaje de ripple, por lo tanto la idea de un filtro LC consiste en eliminar tal Ripple
+
+    \item \underline{La red $D_{5}$, $C_{3}$ y $R_{1}$:} Este tipo de redes cumplen una función llamada $"$RCD Snubber$"$ o $"$Clamping Circuit$"$ para el nodo de conmutación principal. Estas redes se deben a la problemática de la inductancia de dispersión propia de la no idealidad del transformador, la cual surge de que existe una energía que no se llega a transmitir al secundario. Se tiene que cuando los diodos del puente ($D_{1}$ a $D_{4}$) dejan de conducir bruscamente, esa energía acumulada en el transformador genera un "pico" de tensión muy alto y oscilaciones las cuales deben ser tenidas en cuenta.
+
+    Para ello se implementa esta red RCD Snubber la cual se caracteriza por buscar $"$atrapar$"$ esos picos de tensión que vienen del puente rectificador y para ello se utilizan:
+    \begin{itemize}
+        \item \underline{Diodo de bloqueo ($D_{5}$):} Permite que los picos de tensión carguen el capacitor $C_{3}$, pero impide que esa energía vuelva hacia atrás al circuito.
+        \item \underline{Capacitor de absorción ($C_{3}$):} Este absorbe la energía del pico de tensión, evitando que esta llegue a valores peligrosos que podrían quemar los diodos del puente o incluso los MOSFETs por reflexión.
+        \item \underline{Resistor de descarga ($R_{1}$):} Esta resistencia disipa la energía que absorbe el capacitor $C_3$ en forma de calor, permitiendo que $C_{3}$ esté listo para absorber el siguiente pico en el próximo ciclo de conmutación. $[1]$
+    \end{itemize}
+\end{itemize}
+
+Con una idea mas clara del funcionamiento del circuito, se propone entonces estudiar las formas de onda características de este circuito en las partes más importantes del mismo:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Figura 2.png}
+    \caption{Formas de onda características del conversor DC-DC Push-Pull.}
+    \label{fig:fig_2}
+\end{figure}
+
+Primero que nada, dado que los MOSFETs no pueden estar ambos conduciendo en simultáneo, se debe dejar un cierto tiempo muerto donde ambos estén apagados el cual lo llamaremos $t_{OFF}$. Por otro lado se observa la tensión alterna de onda cuadrada a la salida del transformador la cual será rectificada por los diodos, tal como se muestra en la gráfica inmediatamente de abajo.
+
+Se observa en la ante última gráfica, la tensión de salida del puente de diodos la cual tiene dos trazos, uno en celeste que representa como se vería idealmente esta tensión y otra en rojo punteado donde es en realidad como se ve tal tensión. Como se mencionó, las inductancias de dispersión propias del transformador, generaran picos de tensión los cuales pueden dañar al circuito y de allí la necesidad de incluir una red RCD Snubber.
+
+Finalmente, se observa la tensión de salida del circuito con un cierto ripple, que si bien la red LC lo suaviza, este siempre seguirá existiendo dada la naturaleza de este conversor.
+
+
+
+\subsection{Selección de los MOSFETs de potencia}
+Para comenzar de forma más práctica con el proceso de selección de componentes para este conversor, se necesitan ciertos datos de diseño los cuales se presentan en la consigna de este TP y aquí se presentan en la siguiente tabla:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|} \hline
+        \textbf{Control}            & En tensión aislado \\ \hline
+        \textbf{Eficiencia}         & $E_{f} \geqslant 80 \ [\%]$ \\ \hline
+        \textbf{Ripple}             & $\gamma_{L} \leqslant 2 \ [\%]$ \\ \hline
+        \textbf{Potencia}           & $P \geqslant 1 \ [kW]$ \\ \hline
+        \textbf{Tensión de Entrada} & $V_{CC} = 24 \ [V]$ \\ \hline
+        \textbf{Tensión de Salida}  & $V_{out} = 600 \ [V]$ \\ \hline
+    \end{tabular}
+    \caption{Parámetros de diseño del Conversor DC-DC.}
+    \label{tab:tab_1}
+\end{table}
+
+Como hemos estudiado en el \href{https://github.com/ErnestMonja/Electronica-Industrial/blob/main/TPT4%20%20%20-%20MOSFET%20de%20Potencia/Monja.TPT4.EI2026.pdf}{Trabajo Práctico N°4}, si bien existen una variedad de parámetros para los cuales se eligen los MOSFETs, nosotros centraremos nuestro proceso de selección en tan solo dos parámetros:
+\begin{itemize}
+    \item \underline{Máxima Tensión Drenador-Surtidor:} Nótese que cuando alguno de los dos MOSFETs no conduce, este debe soportar el doble de la tensión de alimentación y ademas tomaremos un coeficiente de seguridad de $Coef_{seg} = 1.3 \ [veces]$, por lo tanto la tensión máxima del Drenador-Surtidor debe ser igual a:
+    \begin{equation}
+        V_{DS(max)} = 2(Coef_{seg})(V_{CC}) = 2(1.3)(24) = 62.4 \ [V]
+        \label{eq_1}
+    \end{equation}
+
+    \item \underline{Máxima Corriente de Drenador:} Para ello debemos primero estimar la potencia del primario, donde se pide una eficiencia $E \geqslant 80 \ [\%]$. Esto implica que para entregar $1000 \ [W]$ a la salida, entonces la fuente de entrada debe entregar:
+    \begin{equation}
+        P_{P} = \frac{P}{E_f} = \frac{1000}{0.8} = 1250 \ [W]
+        \label{eq_2}
+    \end{equation}
+    
+    Luego, sabemos que la corriente del primario estará dada por:
+    \begin{equation}
+        I_{P} = \frac{P_{P}}{V_{P}} = \frac{1250}{24} \approx 52.08 \ [A]
+        \label{eq_3}
+    \end{equation}
+
+    Finalmente, si multiplicamos esta corriente por un coeficiente de seguridad de $Coef_{seg} = 1.3 \ [veces]$, se tiene que la corriente máxima del drenador será igual a:
+    \begin{equation}
+        I_{DS(max)} = I_{P}(Coef_{seg}) = 52.08(1.3) \approx 67.7 \ [A]
+        \label{eq_4}
+    \end{equation}
+\end{itemize}
+
+Vemos entonces que debemos elegir los MOSFETs de acuerdo a los valores de tensión y corriente expresados en \eqref{eq_1} y \eqref{eq_4}, por lo tanto se propone utilizar un IRFB4110 para el cual se presenta en su hoja de datos la siguiente tabla:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Figura 3.png}
+    \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/834151/ISC/IRFB4110.html}{Hoja de datos del IRFB4110.}}
+    \label{fig:fig_3}
+\end{figure}
+
+En esta hoja de datos, se observa que el IRFB4110 tiene una tensión: $V_{DSS} = 100 \ [V]$ y una $I_{D} = 180 \ [A]$ los cuales son valores lo suficientemente por encima de los que en realidad se encontrará el MOSFET $[2].$
+
+
+
+\subsection{Implementación del SG-3525 para el disparo de los MOSFETs}
+Para comandar a los MOSFETs que se encuentran en los extremos del transformador, se propone utilizar el SG3525 siendo este un modulador de ancho de pulso para circuitos de disparo.
+
+Para comandar correctamente a los MOSFETs, el fabricante entrega en su hoja de datos las curvas correspondientes al tiempo de carga y descarga de acuerdo a los valores de la resistencia $R_{t}$ y el capacitor $C_{t}$ que se eligan, tal que:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figura 4.png}
+    \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/5632/MOTOROLA/SG3525.html}{Curvas del oscilador interno del SG3525} $[3]$.}
+    \label{fig:fig_4}
+\end{figure}
+
+De estas gráficas y con un ajuste manual es algunos parámetros se propone la siguiente conexión del SG3525:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 5.png}
+    \caption{Configuración elegida para el SG3525.}
+    \label{fig:fig_5}
+\end{figure}
+
+Se observan como resultado de esta selección de componentes, las formas de onda de salida ($V_{G1}$ y $V_{G2}$) y de entrada ($V_{in} = V_{CC} = 24 \ [V]$ y $V_{c} = 18 \ [V]$) en la siguiente figura:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figura 6.png}
+    \caption{Formas de onda del SG3525.}
+    \label{fig:fig_6}
+\end{figure}
+
+Se observa aquí una tensión de control de $V_{G1} = V_{G2} = 16.89 \ [V]$ con un periodo de: $T = 29.87 \ [\mu s]$.
+
+
+
+\subsection{Selección de los Diodos de Potencia}
+Como se ha estudiado en el \href{https://github.com/ErnestMonja/Electronica-Industrial/blob/main/TPT2%20%20%20-%20Diodos%20de%20Potencia/Monja.TPT2.EI2026.pdf}{Trabajo Práctico N°2}, la selección de diodos se basa principalmente en tan sólo dos parámetros fundamentales:
+\begin{itemize}
+    \item \underline{Máxima Tensión Inversa Soportada:} Se sabe que la tensión de salida $V_{out} = 600 \ [V]$, por lo tanto la tensión pico que soportarán estos diodos sera esa misma tensión sumada a un factor de seguridad de $Coef_{seg} = 2 \ [Veces]$, tal que:
+    \begin{equation}
+        V_{RRM} = Coef_{seg}(V_{out}) = 2(600) = 1200 \ [V]
+        \label{eq_5}
+    \end{equation}
+
+    \item \underline{Máxima Corriente Directa Conducida:} Se tiene que la corriente del secundario se calcula como:
+    \begin{equation}
+        I_{S} = \frac{P_S}{V_S} = \frac{P}{E_{f}V_{out}} = \frac{1000}{0.8(600)} \approx 2.08 \ [A]
+        \label{eq_6}
+    \end{equation}
+\end{itemize}
+
+Para estos valores, se opta por utilizar el RHR15120, el cual según su hoja de datos, presenta los siguientes datos:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figura 7.png}
+    \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/54454/FAIRCHILD/RHR15120.html}{Hoja de datos del RHR15120} $[4]$.}
+    \label{fig:fig_7}
+\end{figure}
+
+
+
+\subsection{Simulación}
+Previo a comenzar la simulación, todavía debemos definir un par de componentes restantes para el circuito y para ello comenzaremos definiendo la relación de transformación del transformador y consecuentemente el valor de las inductancias que lo conforman, la cual está definida por
+\begin{equation}
+    k = \frac{V_{S}}{V_{P}} = \sqrt{\frac{L_{S}}{L_{P}}}
+    \label{eq_7}
+\end{equation}
+
+Sabemos las tensiones tanto del primario como del secundario y por lo tanto, se debe cumplir que:
+\begin{equation}
+    L_{S} = \left(\frac{V_{S}}{V_{P}}\right)^{2} L_{P} 
+    \label{eq_8}
+\end{equation}
+
+Tal que: $L_{S} = 625(L_{P})$, de modo que la inductancia del secundario debe ser $625 \ [veces]$ mayor a las del primario tal que para las frecuencias de conmutación elegidas en el SG3525, se tiene que la inductancia $L_{P1} = L_{P2} = 5 \ [\mu Hy]$ y por lo tanto: $L_{S} = 6.25 \ [\mu Hy]$ para mantener tal relación de transformación y a su vez permitir la conmutación necesaria de los MOSFETs.
+
+Por otro lado, todavía resta definir los valores del filtro LC, para los cuales se eligió que: $L_{1} = 1 \ [mHy]$ y que: $C_{2} = 1 \ [\mu F]$ de modo que estos valores serán los encargados de filtrar gran parte de la señal de alterna del circuito. Por último, se fijo el valor de $C_{3} = 2.2 \ [nF]$ siendo este el capacitor de la red RCD Snubber.
+
+Se tiene entonces que el circuito final a simular será el siguiente:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figura 8.png}
+    \caption{Simulación en LTSpice del conversor DC-DC final.}
+    \label{fig:fig_8}
+\end{figure}
+
+Se obtienen entonces las siguientes curvas:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figura 9.png}
+    \caption{Curvas características del conversor DC-DC final.}
+    \label{fig:fig_9}
+\end{figure}
+
+Se observan las gráficas de:
+\begin{itemize}
+    \item En verde flúor, la tensión de compuerta ($V_{G1}$).
+    \item En azul, la tensión de compuerta ($V_{G2}$).
+    \item En rojo, la tensión de salida ($V_{out} \approx 600 \ [V]$).
+    \item En verde agua, la tensión del secundario del transformador ($V_{S}$).
+    \item En rosa, la corriente a través del diodo 1 ($I_{D_{1}}$)
+\end{itemize}
+
+
+
+\section{Conclusión}
+Como se ha desarrollado a lo largo de este informe, se ha podido analizar un conversor DC-DC con MOSFETs, donde no tan solo se realizo una explicación teórica del mismo, sino que con algunos datos se eligieron los componentes de potencia necesarios y se definieron ademas otras variables en juego del sistema. Vemos que la tensión de salida es de aproximadamente $600 \ [V]$, lo cual es un indicio del correcto diseño y simulación de este circuito.
+
+Se identifico la necesidad de utilizar diodos HyperFast dadas las velocidades de conmutación necesarias para obtener tales tensiones de salida, también se encontró la utilidad de la red RCD Snubber para amortiguar los picos de tensión, y del filtro LC para suavizar las tensiones de salida del filtro.
+
+Se tiene que el circuito analizado corresponde a una etapa de potencia DC-DC elevadora con topología Push-Pull. Su aplicación principal se encuentra en sistemas de energías renovables (inversores fotovoltaicos) y unidades UPS industriales, donde se requiere transformar bajas tensiones de baterías en un bus de alta tensión continua (HVDC) de manera eficiente y aislada.
+
+
+\section{Bibliografía}
+\begin{itemize}
+    \item \underline{$[1]$:} Ivanovic, Z.; Knezic, M. Modeling Push–Pull Converter for Efficiency Improvement. Electronics 2022, 11, 2713. https://doi.org/10.3390/electronics11172713
+    \item \underline{$[2]$:} Inchange Semiconductor. (s.f.). \textit{IRFB4110: Power Mosfet N-Channel} [Hoja de datos]. \href{https://www.alldatasheet.com/datasheet-pdf/view/834151/ISC/IRFB4110.html}{https://www.alldatasheet.com/ISC/IRFB4110}
+    \item \underline{$[3]$:} Motorola Solutions. (s.f.). \textit{SG3525: Pulse Width Modulator Control Circuit} [Hoja de datos]. \href{https://www.alldatasheet.com/datasheet-pdf/view/5632/MOTOROLA/SG3525.html}{https://www.alldatasheet.com/MOTOROLA/SG3525}
+    \item \underline{$[4]$:} Fairchild Semiconductor. (s.f.). \textit{RHR15120: 15A, 1200V Hyperfast Diode} [Hoja de datos]. \href{https://www.alldatasheet.com/datasheet-pdf/view/54454/FAIRCHILD/RHR15120.html}{https://www.alldatasheet.com/FAIRCHILD/RHR15120}
+\end{itemize}
+
+\end{document}
