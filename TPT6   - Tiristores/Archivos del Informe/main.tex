@@ -1,0 +1,358 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{siunitx} % Ángulos
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{minted}  % Códigos
+\usepackage{gensymb} % Grados: "°"
+\graphicspath{{Figuras/}}
+\onehalfspacing
+
+
+% Datos
+\author{Nombre y Apellido \\ Legajo: XXXXX}
+\date{\today}
+
+\begin{document}
+
+% Carátula personalizada
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.25\textwidth]{escudo.png} 
+    \hspace{1cm}
+    \includegraphics[width=0.3\textwidth]{download.png} \\[1cm]
+
+    {\large \textbf{UNIVERSIDAD NACIONAL DE CÓRDOBA} \\[0.5cm]}
+    {\large \textbf {FACULTAD DE CIENCIAS EXACTAS, FÍSICAS Y NATURALES} \\[1cm]}
+    {\Large ELECTRÓNICA INDUSTRIAL \\[1cm]}
+
+    \rule{\textwidth}{0.5pt} \\[0.5cm]
+    {\Large \textbf{Trabajo Práctico Teórico N°6} \\[0.3cm]}
+    {\Large \textbf{Tiristores} \\[0.3cm]}
+    \rule{\textwidth}{0.5pt} \\[1cm]
+
+\begin{tabular}{l l}
+\textbf{Profesor Titular:} & Ing. Agüero Adrián.\\
+\textbf{Profesor Adjunto:} & Ing. Gangi O. Sergio.\\
+\textbf{Profesor Adjunto:} & Ing. Laboret Sergio.\\
+
+\\
+\textbf{Alumno:} Monja, Ernesto Joaquín. \\
+\textbf{DNI:} 43.873.728 \\
+\end{tabular}\\[3cm]
+
+{\centering Año 2026 \par}
+
+\end{titlepage}
+
+
+
+% Índice
+\tableofcontents
+\newpage
+\indent
+
+
+
+\section{Introducción}
+En este trabajo práctico se busca investigar sobre los Tiristores de potencia existentes
+en el mercado, analizar sus hojas de datos y realizar simulaciones sobre los mismos en
+cuanto a parámetros característicos, gráficas y selección de los mismos para aplicaciones
+de la Electrónica de Potencia.
+
+
+
+\section{Desarrollo}
+\subsection{Lectura de Hojas de Datos}
+\subsubsection{Aplicación al Tiristor SKKT106}
+El tiristor de potencia elegido para este apartado es el SKKT106 con encapsulado TO-240 AA para el cual, si revisamos su hoja de datos en internet, podemos encontrar las siguientes tablas:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.53\linewidth]{Figura 1.png}
+    \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/89067/SEMIKRON/SKKT106.html}{Tabla 2 de la hoja de datos del SKKT106} [1].}
+    \label{fig:fig_1}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Figura 2.png}
+    \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/89067/SEMIKRON/SKKT106.html}{Tabla 1 de la hoja de datos del SKKT106} [1].}
+    \label{fig:fig_2}
+\end{figure}
+
+De aquí se deducen los siguientes valores:
+\begin{itemize}
+    \item \underline{Corriente Media del Tiristor ($I_{T(AV)}$):} Es la corriente media máxima que puede soportar el tiristor en estado de conducción y se define para una señal senoidal de $180 \ [\degree]$. En este caso el fabricante indica que es igual a: $I_{T(AV)} = 115 \ [A]$ para una $T_{c} = 80 \ [\degree C]$.
+
+    \item \underline{Corriente Eficaz del Tiristor ($I_{T(rms)}$):} Es la corriente eficaz máxima que soporta el tiristor donde aquí se tiene que esta es igual a: $I_{T(rms)} = 180 \ [A]$.
+
+    \item \underline{Corriente Pico no Repetitiva del Tiristor ($I_{TSM}$):} Es la corriente de pico máxima (no repetitiva) que el componente aguanta durante un medio ciclo ($10 \ [ms]$ a $50 \ [Hz]$) y aquí, esta es igual a: $I_{TSM} = 1900 \ [A]$ a una: $T_{vj} = 130 \ [\degree C]$.
+
+    \item \underline{Tensión Inversa Pico Repetitiva ($V_{RRM}$):} La tensión máxima que el tiristor puede bloquear en sentido inverso de forma repetitiva (ciclo a ciclo). Aquí es igual a: $V_{RRM} = 600 \ [V]$.
+
+    \item \underline{Tensión Inversa Pico no Repetitiva ($V_{RSM}$):} Se trata de un valor un poco más alto que el $V_{RRM}$ y simboliza un $"$margen de seguridad$"$ para picos transitorios accidentales ($\mu s$) que no se repiten. Aquí es igual a: $V_{RSM} = 700 \ [V]$.
+
+    \item \underline{$i^{2}t$ para fundirse:} Indica la capacidad de absorción de energía térmica del semiconductor antes de destruirse y en este caso esta dada por: $i^{2}t = 18000 \ [A^{2}s]$ para una: $T_{vj} = 130 \ [\degree C]$ y un periodo de cortocircuito de $T = 8,3/10 \ [ms]$. 
+\end{itemize}
+
+Por otro lado, el fabricante provee en la tabla de la Fig. \ref{fig:fig_1} los parámetros de compuerta característicos de este tiristor para los cuales se observan:
+\begin{itemize}
+    \item \underline{$V_{GT}$ e $I_{GT}$:} Tensión y corriente mínimas necesarias para asegurar que el tiristor "dispare" y empiece a conducir. Según la tabla, estos valores son iguales a: $V_{GT} = 3 \ [V]$ e $I_{GT} = 150 \ [mA]$ ambos para una $T_{vj} = 25 \ [\degree C]$.
+    
+    \item \underline{$V_{GD}$ e $I_{GD}$:} Tensión y corriente máximas que no dispararán el dispositivo (sirve para evitar disparos accidentales por ruido eléctrico). En este caso, se tiene que según la tabla, estos valores son iguales a: $V_{GD} = 0,25 \ [V]$ e $I_{GD} = 6 \ [mA]$ para una: $T_{vj} = 130 \ [\degree C]$.
+\end{itemize}
+
+Nótese que el fabricante también provee una gráfica de las características de compuerta la cual se presenta a continuación:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 3.png}
+    \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/89067/SEMIKRON/SKKT106.html}{Gráfica de las características de compuerta del SKKT106} [1].}
+    \label{fig:fig_3}
+\end{figure}
+
+Al igual que como se vió en el \href{https://github.com/ErnestMonja/Electronica-Industrial/tree/main/TPT2%20%20%20-%20Diodos%20de%20Potencia}{Trabajo Práctico N°2} sobre los diodos de potencia, existe una curva que relaciona la potencia disipada por el tiristor (en este caso, dado que el encapsulado TO-240 AA contiene 2 tiristores dentro de el, este valor hace referencia a la potencia que disipa todo el bloque) con la corriente media del tiristor el cual se presenta en la siguiente figura:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 4.png}
+    \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/89067/SEMIKRON/SKKT106.html}{Gráfica de Potencia disipada contra corriente media del tiristor SKKT106} [1].}
+    \label{fig:fig_4}
+\end{figure}
+
+Aquí, el fabricante provee una variedad de curvas paramétricas las cuales hacen referencia al ángulo de conducción del tiristor ya que este, al ser un conmutador forzado, permite controlar cuando conmutará entre un estado u otro, y se relaciona tal conmutación con el angulo que lleva la senoidal en ese momento.
+
+De forma gráfica (es decir siguiendo la Fig. \ref{fig:fig_4}) se tiene que para una misma corriente media, cuanto menor sea el ángulo de conducción, por ejemplo $30 \ [\degree]$, mayor es el pico de corriente para compensar, lo que genera más calor. Por eso, la curva de $30 \ [\degree]$ siempre sube más rápido en potencia que la de $180 \ [\degree]$.
+
+
+
+\subsubsection{Montaje del Puente Rectificador Monofásico Semicontrolado}
+Un puente rectificador monofásico semicontrolado con carga resistiva es un circuito que presenta la siguiente topología circuital:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Figura 5.png}
+    \caption{Puente Rectificador Monofásico Semicontrolado con Carga Resistiva.}
+    \label{fig:fig_5}
+\end{figure}
+
+Vemos que el circuito obtiene su potencia AC de la red domestica y se conecta a un transformador monofásico siendo este el punto de partida del rectificador. El objetivo de este es reducir la tensión de red ($220 \ [V]$ a $50 \ [Hz]$) a una tensión de trabajo segura (por ejemplo a: $24 \ [V]$ o $48 \ [V]$) y además debe tener la potencia necesaria (en $[VA]$) para alimentar a la carga resistiva sin recalentar el transformador.
+
+Por otro lado, el puente de esta conformado por tiristores y diodos, para los cuales resulta fundamental realizar su calculo térmico. En el caso de los tiristores, resulta fundamental que estos mantengan una buena disipación de calor dado que, como se explico en el apartado anterior, de acuerdo al ángulo de conducción, mayor será el pico de corriente y por lo tanto mayor será la potencia disipada. 
+
+Para lo anterior, es fundamental garantizar un buen contacto térmico. Esto se debe a que se busca generar la mayor superficie de contacto entre el disipador y el elemento semiconductor de potenca, y para ello se utiliza la pasta térmica (o grasa siliconada en su defecto) entre ambos para rellenar las porosidades de ambos materiales y así generar la mayor superficie para mejorar la transferencia de calor del dispositivo. Para ello se debe ademas garantizar un buen torque entre ambos módulos ajustando de forma pareja los tornillos que unen ambas partes siguiendo el manual
+
+En la siguiente figura, se observa el proceso de montaje de 2 tiristores (un SKT300/12E a la izquierda y un SKT1200/18E a la derecha), donde dadas sus diferencias en el encapsulado, se utilizan distintos disipadores tal como muestra la figura:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{Figura 6.png}
+    \caption{Montaje de tiristores SKT300/12E (izquierda) y SKT1200/18E (derecha). [2]}
+    \label{fig:fig_6}
+\end{figure}
+
+Nótese que los diodos también deben recibir alguna forma de disipar el calor si los calculos térmicos lo ameritan (para mas información, véase el \href{https://github.com/ErnestMonja/Electronica-Industrial/blob/main/TPT3%20%20%20-%20Rectificaci%C3%B3n/Monja.TPT3.EI2026.pdf}{Trabajo Práctico N°3}). Finalmente, al tenerse los conmutadores forzados, resulta necesario incluir un circuito de control el cual debe estar bien aislado del circuito de potencia, ya que una mala puesta a tierra, puede resultar en el daño irreparable de la electrónica de control
+
+Finalmente, se propone que alguna de las aplicaciones típicas de este circuito de potencia pueden ser:
+\begin{itemize}
+    \item Control de Velocidad de Motores de Corriente Continua.
+    \item Cargadores de Baterías Industriales.
+    \item Fuentes de Alimentación Reguladas de Alta Potencia:
+\end{itemize}
+
+
+
+\subsubsection{Conclusión Parcial}
+La lectura de hoja de datos de un tiristor puede parecer a simple vista como un hecho algo intimidante frente a la gran cantidad de datos que se le presentan al lector, sin embargo como se ha demostrado en la sección precedente, solo requieren de una simple explicación para entender el significado y uso de los parámetros mas importantes para seleccionar un tiristor.
+
+Se tiene entonces que se han podido identificar satisfactoriamente de la hoja de datos:
+\begin{itemize}
+    \item Se han identificado los parámetros eléctricos típicos de interés de un tiristor y su encapsulado, tanto los parámetros de operación del mismo como los parámetros de compuerta con su respectiva gráfica.
+    \item Se ha identificado la gráfica de características de compuerta del tiristor.
+    \item Se ha identificado la gráfica de la potencia disipada frente a la corriente media del tiristor explicando las curvas paramétricas de la misma.
+\end{itemize}
+
+Por otro lado, el análisis del montaje de un circuito rectificador monofásico semicontrolado con tiristores, ha señalado los puntos mas importantes del montaje mismo, teniendo como foco el calculo térmico y la disipación de calor de estos circuitos. Por lo tanto se da como concluida esta primera parte de este Trabajo Práctico.
+
+
+
+\subsection{Circuito Trifásico Semicontrolado}
+\subsubsection{Simulación del Circuito en LTSpice}
+Se propone para esta sección, realizar la simulación y análisis del circuito trifásico semicontrolado que se muestra en la siguiente figura:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figura 7.png}
+    \caption{Simulación en LTSpice de un circuito trifásico semicontrolado}
+    \label{fig:fig_7}
+\end{figure}
+
+De esta figura nos percatamos primeramente los siguientes detalles:
+\begin{itemize}
+    \item Se pide que la alimentación sea trifásica de $50 \ [V_{AC}]$ en valor eficaz (rms), lo que implica que las fuentes de tensión (que simulan ser la salida en estrella de un transformador trifásico $\Delta - Y$), deben ser elegidas con un valor de tensión pico igual a:
+    \begin{equation}
+        V_{s(max)} = \sqrt{2}(V_{s(rms)}) = \sqrt{2} (50) \approx 70.71 \ [V]
+        \label{eq_1}
+    \end{equation}
+    Se asumió que la frecuencia utilizada es la de la red, tal que: $f = 50 \ [Hz]$ y se aplico un desfajase de $120 \ [\degree]$ a cada onda de tensión
+
+    \item El simulador LTSpice no incluye con un modelo nativo de simulación del SCR, por lo tanto se recurrió a un modelo del mismo en internet que presenta los siguientes parámetros:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.4\linewidth]{Figura 8.png}
+        \caption{Parámetros del SCR elegido para la Simulación [3].}
+        \label{fig:fig_8}
+    \end{figure}
+    
+
+    \item Dado que se trata de una rectificación de potencia, se eligieron los MUR460 como los diodos a utilizar los cuales presentan en su hoja de datos los siguientes valores eléctricos máximos:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\linewidth]{Figura 9.png}
+        \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/1923909/ONSEMI/MUR460.html}{Tabla 1 de la hoja de datos del MUR460} [4].}
+        \label{fig:fig_9}
+    \end{figure}
+    Se tiene que las tensiones inversas de trabajo nunca serán tan altas como las que provee la hoja de datos y la corriente directa media se encuentra en valores cercanos al que provee la hoja de datos, tal como muestra la siguiente imagen de la simulación:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\linewidth]{Figura 10.png}
+        \caption{Gráfica de la $I_D$ respecto al tiempo.}
+        \label{fig:fig_10}
+    \end{figure}
+\end{itemize}
+
+Con estas consideraciones de la simulación en mente, se procede a mostrar los valores de tensión y corriente en la carga, denominados: $V_{L}$ e $I_{L}$ respectivamente para un angulo de conducción de $\alpha = 45 \ [\degree]$:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 11.png}
+    \caption{Gráficas de $V_{L}$ (verde) e $I_{L}$ (azul) respecto al tiempo con $\alpha_c = 45 \ [\degree]$.}
+    \label{fig:fig_11}
+\end{figure}
+
+Se propone analizar ahora las gráficas para un ángulo de conducción de $\alpha = 90 \ [\degree]$:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 12.png}
+    \caption{Gráficas de $V_{L}$ (verde) e $I_{L}$ (azul) respecto al tiempo con $\alpha = 90 \ [\degree]$.}
+    \label{fig:fig_12}
+\end{figure}
+
+Finalmente, veamos que pasa con $\alpha = 135 \ [\degree]$:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Figura 13.png}
+    \caption{Gráficas de $V_{L}$ (verde) e $I_{L}$ (azul) respecto al tiempo con $\alpha_c = 135 \ [\degree]$.}
+    \label{fig:fig_13}
+\end{figure}
+
+
+
+\subsubsection{Cálculo de Tensiones y Corrientes con Ángulos de Disparo Variables}
+Se propone para esta sección, realizar los cálculos para los valores medios y eficaces de la tensión en la carga y luego se obtienen fácilmente las corrientes dividiendo estas tensiones por el valor de la resistencia de carga. Partamos entonces de la tensión media en la carga la cual por definición, esta dada por:
+\begin{equation}
+    V_{L(AV)} = \frac{1}{T} \int_{0}^{T} v_{L}(t) dt
+    \label{eq_2}
+\end{equation}
+
+En este caso, realizando los reemplazos adecuados a un angulo de conducción $\alpha$, se deduce que:
+\begin{equation}
+    V_{L(AV)} = \frac{1}{\frac{2\pi}{3}} \int_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{2}} \sqrt{2} V_{s(max)} \cos(\theta) d\theta
+    \label{eq_3}
+\end{equation}
+\begin{equation}
+    V_{L(AV)} = \frac{3\sqrt{2}}{2\pi}V_{s(max)} \left[\sin(\theta)\right]_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{2}}
+    \label{eq_4}
+\end{equation}
+\begin{equation}
+    V_{L(AV)} = \frac{3\sqrt{2}}{2\pi}V_{s(max)} \left[\sin(\frac{\pi}{2})-\sin(-\frac{\pi}{6} + \alpha) \right]
+    \label{eq_5}
+\end{equation}
+
+Lo que se simplifica a:
+\begin{equation}
+    V_{L(AV)} = \frac{3\sqrt{6}}{2\pi}V_{s(rms)} \left(1 - \sin(-\frac{\pi}{6} + \alpha)\right)
+    \label{eq_6}
+\end{equation}
+
+Veamos ahora como calcular la tensión eficaz en la carga para la cual, recordando su definición:
+\begin{equation}
+    V_{L(rms)} = \sqrt{\frac{1}{T} \int_{0}^{T} v_{L}^{2}(t) dt}
+    \label{eq_7}
+\end{equation}
+
+Reemplazando por los valores adecuados, tal como se mostró en \eqref{eq_3}, se tiene que:
+\begin{equation}
+    V_{L(rms)} = \sqrt{\frac{1}{\frac{2\pi}{3}} \int_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{2}} (\sqrt{2} V_{s(max)} \cos(\theta))^{2} d\theta}
+    \label{eq_8}
+\end{equation}
+
+Aplicando propiedades trigonométricas del coseno, se despeja que:
+\begin{equation}
+    V_{L(rms)} = V_{s(max)}\sqrt{\frac{3}{2\pi} (\sqrt{2})^2 \int_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{2}} \frac{1+cos(2\theta)}{2} d\theta}
+    \label{eq_9}
+\end{equation}
+\begin{equation}
+    V_{L(rms)} = V_{s(max)}\sqrt{\frac{3}{2\pi} \left[\theta+\frac{sin(2\theta)}{2}\right]_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{2}}}
+    \label{eq_10}
+\end{equation}
+\begin{equation}
+    V_{L(rms)} = V_{s(max)}\sqrt{\frac{3}{2\pi} \left( \frac{\pi}{2} - (-\frac{\pi}{6} + \alpha + \frac{\sin(\frac{\pi}{3} - 2\alpha)}{2}) \right)}
+    \label{eq_11}
+\end{equation}
+
+Lo que se simplifica finalmente a:
+
+\begin{equation}
+    V_{L(rms)} = V_{s(rms)}\sqrt{\frac{3}{2\pi} \left( \frac{4\pi}{3} - \alpha - \\sin(\frac{\pi}{3} - 2\alpha) \right)}
+    \label{eq_11}
+\end{equation}
+
+Se propone entonces concluir esta sección calculando estos coeficientes para distintos $\alpha$'s y consecuentemente obteniendo las corrientes y tensiones:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|} \hline
+        \textbf{Ángulo ($\alpha$)} & $V_{L(AV)} \ [V]$ & $I_{L(AV)} \ [A]$ & $V_{L(rms)} \ [V]$ & $I_{L(rms)} \ [A]$ \\ \hline
+            45° & 99.82 & 3.99 & 102.96 & 4.12 \\ \hline
+            90° & 58.48 & 2.34 & 75.00 & 3.00 \\ \hline
+            135° & 17.13 & 0.69 & 31.97 & 1.28 \\ \hline
+    \end{tabular}
+    \caption{Resultados Teóricos del Rectificador Trifásico Semicontrolado.}
+\end{table}
+
+Estos valores fueron calculados con una $V_{s(rms)} = 50 \ [V]$ y una $R_{L} = 50 \ [\Omega]$.
+
+\subsubsection{Conclusión parcial}
+En esta sección se ha simulado exitosamente un circuito trifásico rectificador semicontrolado con tiristores, utilizando modelos verificados y componentes reales, como los diodos MUR460. Estas simulaciones nos han permitido visualizar las formas de onda de este circuito las cuales son las correspondientes a un circuito de este estilo.
+
+Por otro lado, se desarrollo un calculo matemático donde se obtuvieron los valores medio y eficaces de la corriente para el circuito desarrollado en el apartado anterior para distintos ángulos de conducción donde ser observa que estos valores tienden a decaer a medida que se aumenta el angulo de conducción ya que un mayor angulo de conducción, implica una reducción del tiempo de conducción y por lo tanto disminuye tanto el promedio aritmético de la tensión (valor medio) como el contenido energético de la señal (valor eficaz).
+
+
+
+\section{Bibliografía}
+\begin{itemize}
+    \raggedright
+    \item \underline{$[1]$:} Semikron. (s.f.). \textit{SKKT 106: Thyristor Modules} [Hoja de datos]. \url{https://www.alldatasheet.com/datasheet-pdf/view/89067/SEMIKRON/SKKT106.html}
+    
+    \item \underline{$[2]$:} Mercado Libre. (s.f.). \textit{Juego de 2 Tiristor Semikron 1200V y 300 Amperes con Disipador} [Catálogo de producto]. \url{https://www.mercadolibre.com.ar/juego-de-2-tiristor-semikron-1200-y-300amperes-cdisipador/up/MLAU272589538}
+
+    \item \underline{$[3]$:} Grunthos, H. M. (2018). \textit{thyristr.lib: SPICE Library for Thyristors} [Código de software]. GitHub. \url{https://github.com/HMGrunthos/InrushTimer/blob/master/thyristr.lib}
+
+    \item \underline{$[4]$:} OnSemi. (s.f.). \textit{MUR460: Switch-mode Power Rectifier} [Hoja de datos]. \url{https://www.alldatasheet.com/datasheet-pdf/view/1923909/ONSEMI/MUR460.html}
+\end{itemize}
+\end{document}
