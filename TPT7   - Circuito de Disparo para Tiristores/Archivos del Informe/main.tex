@@ -1,0 +1,442 @@
+\documentclass[12pt,a4paper]{article}
+
+% Paquetes básicos
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{siunitx} % Ángulos
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{minted}  % Códigos
+\usepackage{gensymb} % Grados: "°"
+\graphicspath{{Figuras/}}
+\onehalfspacing
+
+
+% Datos
+\author{Nombre y Apellido \\ Legajo: XXXXX}
+\date{\today}
+
+\begin{document}
+
+% Carátula personalizada
+\begin{titlepage}
+    \centering
+    \includegraphics[width=0.25\textwidth]{escudo.png} 
+    \hspace{1cm}
+    \includegraphics[width=0.3\textwidth]{download.png} \\[1cm]
+
+    {\large \textbf{UNIVERSIDAD NACIONAL DE CÓRDOBA} \\[0.5cm]}
+    {\large \textbf {FACULTAD DE CIENCIAS EXACTAS, FÍSICAS Y NATURALES} \\[1cm]}
+    {\Large ELECTRÓNICA INDUSTRIAL \\[1cm]}
+
+    \rule{\textwidth}{0.5pt} \\[0.5cm]
+    {\Large \textbf{Trabajo Práctico Teórico N°7} \\[0.3cm]}
+    {\Large \textbf{Circuito de Disparo para Tiristores} \\[0.3cm]}
+    \rule{\textwidth}{0.5pt} \\[1cm]
+
+\begin{tabular}{l l}
+\textbf{Profesor Titular:} & Ing. Agüero Adrián.\\
+\textbf{Profesor Adjunto:} & Ing. Gangi O. Sergio.\\
+\textbf{Profesor Adjunto:} & Ing. Laboret Sergio.\\
+
+\\
+\textbf{Alumno:} Monja, Ernesto Joaquín. \\
+\textbf{DNI:} 43.873.728 \\
+\end{tabular}\\[3cm]
+
+{\centering Año 2026 \par}
+
+\end{titlepage}
+
+
+
+% Índice
+\tableofcontents
+\newpage
+\indent
+
+
+
+\section{Introducción}
+En este trabajo práctico se busca investigar sobre los circuitos de disparo de Tiristores mediante un UJT, estudiando un caso particular el cual se presenta mas adelante. Se buscó comprender el funcionamiento del circuito, elegir componentes de acuerdo a los datos y simularlo para verificar su correcto funcionamiento.
+
+
+
+\section{Desarrollo}
+\subsection{Circuito de Rampa Lineal para el Disparo de Tiristores}
+\subsubsection{Análisis Funcional y Formas de Onda del Circuito}
+El circuito al que realizaremos el estudio es el que se presenta en la siguiente figura:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Figura 1.png}
+    \caption{Circuito de Disparo de Tiristores.}
+    \label{fig:fig_1}
+\end{figure}
+
+El circuito planteado en la Figura \eqref{fig:fig_1}, se han remarcado distintas secciones del mismo siguiendo un esquema de colores para el cual se propone analizar en 3 sub-items siguientes:
+\begin{itemize}
+    \item \underline{\textbf{Rectificador Monofásico de Onda Completa con Diodos Zenner:}} Se observa que desde la fuente de alimentación hasta el diodo Zenner, existe un rectificador monofásico de onda completa que busca rectificar una señal de corriente alterna (la cual se indica en la consigna que: $V_{p(rms)} = 220 \ [V]$) a una de $24\ [V]$ dado el diodo Zenner de enclavamiento. Se asume entonces que esta tensión de alimentación surge de la red eléctrica monofásica y por lo tanto se deduce que: $f = 50 \ [Hz]$.
+    
+    Si inspeccionamos más a detalle esta rectificación, es fácil percatarse que el conexionado de los diodos es incorrecto y se deduce de un simple análisis: Supongamos que se genera una tensión de salida positiva en el terminal superior a la salida del transformador, esta tensión seguirá el camino del diodo superior del puente y luego, en lugar de derivarse a la resistencia $R_D$, encuentra un camino de menor resistencia en el diodo inmediatamente siguiente, el cual le permite derivarse al secundario del transformador y así cerrando el ciclo. Nótese también que de tenerse una tensión negativa, el proceso que ocurre sería el mismo al visto anteriormente solo que a la inversa. Se propuso entonces corregir el conexionado del puente de diodos, para que este cobre mas sentido en el contexto de la rectificación.
+
+    Supóngase entonces (y de momento ignore los valores de la simulación ya que serán explicados más adelante) que se arma un circuito tal como el que se muestra en la figura con las siguientes salidas de tensión antes del Zenner (En azul y señalizado por $V_D$) y luego del mismo (En rojo y señalizado por $V_{out}$):
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{Figura 2.png}
+        \caption{Salida antes y después del Zenner del rectificador monofásico de onda completa.}
+        \label{fig:fig_2}
+    \end{figure}
+
+    Nótese que la salida de tensión denominada $V_{out}$ y en color rojo en la Figura \eqref{fig:fig_2}, tiene unos valles donde la tensión cae de el valor al que regula el zenner, es decir: $24 \ [V]$ a un valor aproximado de: $17.5 \ [V]$. El uso de esta caída de tensión será explicado mas adelante. Por el momento, veamos entonces que valores elegir para cada componente:
+    \begin{itemize}
+        \item \underline{Transformador ($T1$):} La idea de este rectificador consiste en reducir la tensión de $V_{P(rms)} = 220 \ [V]$ a $V_{S(rms)} = 24 \ [V]$, por lo que la relación de transformación estará dada por:
+        \begin{equation}
+            k = \frac{V_{S(rms)}}{V_{P(rms)}} = \sqrt{\frac{L_{S}}{L_{P}}}
+            \label{eq_1}
+        \end{equation}
+        
+        Por lo tanto se deduce que:
+        \begin{equation}
+        L_{P} = \left(\frac{V_{P(rms)}}{V_{S(rms)}}\right)^{2} L_{S} = \left(\frac{220}{24}\right)^{2} L_{S} \longrightarrow L_{P} \approx 84 L_{S}
+            \label{eq_2}
+        \end{equation}
+
+        Por lo tanto, dada la frecuencia de $f = 50 \ [Hz]$, se elije que $L_{S} = 1 \ [\mu Hy]$, de modo que $L_{P} = 84 \ [\mu Hy]$. Se define también que la resistencia interna de los bobinados del transformador será de: $1 \ [m\Omega]$ para evitar problemas en la simulación.
+
+        \item \underline{Puente de Diodos ($D_{1}$, $D_{2}$, $D_{3}$ y $D_{4}$):} Para ello se debió elegir algunos diodos fundamentalmente en dos valores: $I_{F(AV)}$ y la $V_{RRM}$, para los cuales se opto por el diodo 1N4007 para el cual se tienen los siguientes valores según su hoja de datos:
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.8\linewidth]{Figura 3.png}
+            \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/1934502/ONSEMI/1N4007.html}{Hoja de datos del 1N4007} [1].}
+            \label{fig:fig_3}
+        \end{figure}
+
+        Nótese que la $V_{s(max)} = \sqrt{2} V_{s(rms)} \approx 33.94 \ [V]$ por lo tanto el diodo verifica con un buen margen al requerimiento de $V_{RRM}$ impuesto por el fabricante. En cuanto a la corriente $I_{F(AV)} = 1 \ [A]$, esta también se encuentra dentro de un cómodo margen de seguridad ya que la simulación verifica que esta corriente se debe encontrar en estado estacionario dentro del orden de los $[mA]$. Para el capacitor de compensación, se eligió que $C = 2200 \ [\mu F]$.
+
+        \item \underline{Diodo y Resistencia de Zenner ($R_{D}$ y $D_{Z}$):} Dado que se busca enclavar la tensión de alimentación en $24 \ [V]$, se opto por utilizar un diodo zenner BZX84C24VL el cual el fabricante provee los siguientes valores en su hoja de datos:
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=0.7\linewidth]{Figura 4.png}
+            \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/929186/ROHM/BZX84C24VL.html}{Hoja de datos del BZX84C24VL} [2].}
+            \label{fig:fig_4}
+        \end{figure}
+
+        Se acompaño el diodo zenner con una resistencia de: $R_{D} = 270 \ [\Omega]$.
+    \end{itemize}
+
+
+
+    \item \underline{\textbf{Circuito de Disparo de Rampa Lineal:}} El circuito que se presenta inmediatamente luego del diodo zenner y termina hasta el transformador $T2$, se lo conoce como un circuito de rampa lineal. Analicemos un poco mas a detalle su funcionamiento:
+
+    En los circuitos de disparo más básicos, se suele usar una simple resistencia y un capacitor (circuito RC), sin embargo ocurre que el capacitor se carga de forma exponencial, lo que hace que el control del ángulo de disparo no sea lineal con respecto al giro del potenciómetro. Para solucionar esto, se propone utilizar un transistor PNP ($Q_{1}$) junto con $R_{1}$, $R_{f}$ y $R_{2}$ para crear una fuente de corriente constante, de modo que el capacitor de disparo se cargue de forma perfectamente lineal (una rampa de voltaje recta en lugar de una curva). Esto te da un control mucho más preciso y suave sobre la potencia entregada a la carga.
+
+    Se propone entonces implementar este circuito con los siguientes valores:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=1\linewidth]{Figura 5.png}
+        \caption{Circuito de Disparo de Rampa Lineal Incorporado con curvas incorporadas.}
+        \label{fig:fig_5}
+    \end{figure}
+
+    Se observa en esta Figura \eqref{fig:fig_5} las siguientes gráficas:
+    \begin{itemize}
+        \item En verde flúor, la tensión ya rectificada de los diodos ($V_{D}$).
+        \item En rojo, la tensión de salida del diodo zenner ($V_{Rect}$).
+        \item En verde agua, la tensión del capacitor de disparo del UJT ($V_{C1}$).
+        \item En rosa, la tensión de disparo del UJT que irá a la compuerta del TRIAC ($V_{Pulso}$).
+    \end{itemize}
+
+    Para elegir los valores de los componentes, primero se eligió un UJT 2N2646 para el disparo del TRIAC. Nótese que el simulador LTSpice no cuenta con un modelo nativo de este dispositivo por lo tanto, este tuvo que ser implementado siguiendo librerías externas (Véase [3] y [4]) y se comprobó su correcta implementación siguiendo la configuración propuesta por el fabricante:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.6\linewidth]{Figura 6.png}
+        \caption{\href{https://www.alldatasheet.com/datasheet-pdf/view/80358/PHILIPS/2N2646.html}{Circuito de Disparo del UJT 2N2646}. [5]}
+        \label{fig:fig_6}
+    \end{figure}
+    
+    Para nuestra aplicación, se fijo el capacitor $C_{1} = 0.1 \ [\mu F]$, de modo que este se cargue cada $4.5 \ [ms]$. Por otro lado, el fabricante del UJT, indica que la resistencia $R_{B2}$ limita la corriente y estabiliza el punto de disparo frente a cambios de temperatura. Usamos la fórmula empírica clásica:
+    \begin{equation}
+        R_{B2} \approx \frac{10000}{\eta (V_{z})} = \frac{10000}{0.65(24)} \approx 641 \ [\Omega]
+        \label{eq_3}
+    \end{equation}
+    
+    Donde $\eta = \frac{V_{E(P)} - V_{EB1}}{V_{B2B1}} \approx 0.65$ (véase de [5]) y se fija a $R_{B2} = 680 \ [\Omega]$. Luego, dado que buscamos que el circuito dispare alrededor de los $4.5 \ [ms]$, calculamos el voltaje de disparo ($V_P$) del UJT (asumiendo una caída interna de la juntura base-emisor de $Q_{1}$ de $0.7 \ [V]$):
+    \begin{equation}
+        V_{P} = \eta(V_{z}) + V_{D} = 0.65(24) + 0.7 = 16.3 \ [V]
+        \label{eq_4}
+    \end{equation}
+    
+    Ahora se puede calcular la corriente ($I_{C}$) que debe entregar el transistor $Q_{1}$ para cargar el capacitor de $0.1 \ [\mu F]$ a $16.2 \ [V]$ en $4.5 \ [ms]$ donde:
+    \begin{equation}
+        I_{C} = C_{1} \frac{V_{P}}{t} = 0.1x10^{-6} \frac{16.3}{4.5x10^{-3}} \approx 0.36 \ [mA]
+        \label{eq_5}
+    \end{equation}
+    
+    Luego, se tiene que la corriente de colector $I_{C}$ está definida por:
+    \begin{equation}
+        I_{C} \approx \frac{V_{z} - V_{E}}{R_{2}}
+        \label{eq_6}
+    \end{equation}
+    
+    Donde el voltaje del emisor $V_{E}$ depende del divisor de tensión en la base:
+    \begin{equation}
+        V_{E} = V_{z}\left(\frac{R_{F}}{R_{1} + R_{F}}\right) + 0.7
+        \label{eq_7}
+    \end{equation}
+    
+    Si fijamos a $R_{2} = 1 \ [k\Omega]$, entonces se deduce que $V_{E} = V_{Z} - I_{C}R_{2} = 24 - 0.36 = 23.64 \ [V]$ y dado que hay una caída de $0.7 \ [V]$ entre la base y el emisor, el voltaje que se necesita en la base ($V_{B}$) es: $23.64 - 0.7 = 22.94 \ [V]$. Este voltaje se ajusta con el divisor formado por $R_1$ y $R_F$ y que esta definido por:
+    \begin{equation}
+        V_{B} = V_{z} \left(\frac{R_{F}}{R_{1} + R_{F}}\right)
+        \label{eq_8}
+    \end{equation}
+    
+    Para resolver esto simplemente, fijamos $R_{1} = 4.7 \ [k\Omega]$ siendo este en un valor comercial típico para estos circuitos, de modo que despejando a $R_{F}$, se tiene que:
+    \begin{equation}
+        22.94 = 24 \left(\frac{R_F}{4700 + R_F}\right)
+        \label{eq_9}
+    \end{equation}
+    
+    Resolviendo la ecuación, nos da que $R_F$ debe ser de aproximadamente $R_{F} \approx 100 \ [k\Omega]$. Finalmente se opto para el transistor $Q_{1}$, un 2N3906 ya que soporta hasta $40 \ [V]$ de $V_{CEO}$ y $200 \ [mA]$ de corriente de colector, lo cual está elegido con un buen margen de seguridad para este circuito.
+
+
+
+    \item \underline{\textbf{Transformador 2 y Carga Rectificada:}} Para esta ultima parte, se propone modificar levemente la salida, de modo que para utilizar 2 SCRs en antiparalelo en lugar de un TRIAC, se requiere de un transformador con dos terminales de salida, tal como se muestra en la siguiente figura:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\linewidth]{Figura 7.png}
+        \caption{Simulación final del circuito de disparo de Tiristores.}
+        \label{fig:fig_7}
+    \end{figure}
+
+    El único calculo realizado fue la determinación de la resistencia de carga $R_{L}$ la cual simboliza el horno de $3600 \ [W]$ de la consigna donde dado el conexionado de este circuito, se deduce que la resistencia de carga será igual a:
+    \begin{equation}
+        R_{L} = \frac{V_{P(rms)}^{2}}{P_{L}} = \frac{220^{2}}{3600} \approx 13.44 \ [\Omega]
+        \label{eq_10}
+    \end{equation}
+    
+    Por lo tanto, se tiene que simulando este circuito se obtienen la siguientes curvas características:
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\linewidth]{Figura 8.png}
+        \caption{Simulación final del circuito de disparo de Tiristores.}
+        \label{fig:fig_8}
+    \end{figure}
+
+    Aquí, se observan las siguientes gráficas:
+    \begin{itemize}
+        \item En rojo, a tensión de salida del diodo zenner ($V_{Rect}$).
+        \item En verde agua, la tensión del capacitor de disparo del UJT ($V_{C1}$).
+        \item En rosa, la tensión de alimentación del primario ($V_{P}$).
+        \item En verde fluor, la tensión a bornes de $R_{L}$ ($V_{R_{L}}$).
+        \item En azul oscuro, la corriente de carga ($I_{R_{L}}$).
+    \end{itemize}
+\end{itemize}
+
+
+
+\subsubsection{Conclusión Parcial}
+El comportamiento del circuito analizado es el esperado ya que al remitirse a la Figura \eqref{fig:fig_1}, se tiene que:
+\begin{itemize}
+    \item Las secciones recubiertas rectángulos rojos, demuestran que el proceso de rectificación mediante el puente de onda completa de diodos, y limitación de la señal alterna de entrada al circuito de control de rampa lineal mediante un regulador de tensión con un diodo zenner, son efectivos y se verifican no tan solo por intuición sino también por simulación.
+    \item La sección recubierta en un polígono azul oscuro, representa efectivamente el generador de rampa lineal con el uso de un transistor BJT para generar una fuente de corriente que cargue de forma lineal al capacitor de disparo $C_{1}$ del transistor UJT que a su vez disparará al TRIAC. La implementación del mismo se realizo siguiendo el marco teórico empleado en clases y se verifico mediante el simulador, donde no tan solo se verificó que el circuito de esta sección, sino que también se incluyo una simulación extra que demuestra el correcto funcionamiento del modelo obtenido del UJT.
+    \item Las secciones recubiertas en rectángulos verdes flúor representan la parte de potencia implementada con 2 SCR's, los cuales consisten en los mismos SCR's utilizados en el \href{https://github.com/ErnestMonja/Electronica-Industrial/tree/main/TPT6%20%20%20-%20Tiristores}{Trabajo Práctico N°6} y se verifico que estos funcionen adecuadamente mediante una simulación integradora de todas las partes del circuito.
+\end{itemize}
+Nótese entonces que el análisis, diseño y simulación de este circuito han sido realizadas con éxito en esta sección, dando así como concluido tal análisis.
+
+
+
+\subsection{Circuito Trifásico Controlado}
+\subsubsection{Simulación del Circuito en LTSpice}
+Se propone para esta sección, realizar la simulación y análisis del circuito trifásico semicontrolado que se muestra en la siguiente figura:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figura 9.png}
+    \caption{Simulación en LTSpice de un circuito trifásico semicontrolado.}
+    \label{fig:fig_9}
+\end{figure}
+
+Para un ángulo de disparo de $\alpha_{i} = 30 \ [\degree]$, se observan las siguientes curvas de tensión y corriente en la carga:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figura 10.png}
+    \caption{Simulación en LTSpice de un circuito trifásico semicontrolado con $\alpha_{i} = 30 \ [\degree]$.}
+    \label{fig:fig_10}
+\end{figure}
+
+Veamos que ocurre si se cambia el ángulo de disparo a un $\alpha_{i} = 60 \ [\degree]$:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figura 11.png}
+    \caption{Simulación en LTSpice de un circuito trifásico semicontrolado con $\alpha_{i} = 60 \ [\degree]$.}
+    \label{fig:fig_11}
+\end{figure}
+
+Por ultimo, veamos que ocurre para un angulo de disparo de $\alpha_{i} = 135 \ [\degree]$:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Figura 12.png}
+    \caption{Simulación en LTSpice de un circuito trifásico semicontrolado con $\alpha_{i} = 135 \ [\degree]$.}
+    \label{fig:fig_12}
+\end{figure}
+
+
+
+\subsubsection{Cálculo de Tensiones y Corrientes con Ángulos de Disparo Variables}
+Se propone para esta sección, realizar los cálculos para los valores medios y eficaces de la tensión en la carga y luego se obtienen fácilmente las corrientes dividiendo estas tensiones por el valor de la resistencia de carga. Partamos entonces de la tensión media en la carga la cual por definición, esta dada por:
+\begin{equation}
+    V_{L(AV)} = \frac{1}{T} \int_{0}^{T} v_{L}(t) dt
+    \label{eq_11}
+\end{equation}
+
+En este caso, realizando los reemplazos adecuados a un angulo de conducción $\alpha$, se deduce que:
+\begin{equation}
+    V_{L(AV)} = \frac{1}{\frac{2\pi}{6}} \int_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{6} + \alpha} \sqrt{3} V_{s(max)} \cos(\theta) d\theta
+    \label{eq_12}
+\end{equation}
+\begin{equation}
+    V_{L(AV)} = \frac{3\sqrt{3}}{\pi} V_{s(max)} \left[\sin(\theta)\right]_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{6} + \alpha}
+    \label{eq_13}
+\end{equation}
+\begin{equation}
+    V_{L(AV)} = \frac{3\sqrt{3}}{\pi} V_{s(max)} \left[\sin(\frac{\pi}{6} + \alpha) - \sin(-\frac{\pi}{6} + \alpha)\right]
+    \label{eq_14}
+\end{equation}
+
+Si aplicamos la identidad de resta de senos: $\sin(A) - \sin(B) = 2 \cos\left(\frac{A+B}{2}\right) \sin\left(\frac{A-B}{2}\right)$, se tiene que:
+\begin{equation}
+    2\cos(\alpha) \sin\left(\frac{\pi}{6}\right) = 2 \cos(\alpha) \left(\frac{1}{2}\right) = \cos(\alpha)
+    \label{eq_15}
+\end{equation}
+
+Por lo tanto, se tiene que:
+\begin{equation}
+    V_{L(AV)} = \frac{3\sqrt{3}}{\pi} V_{s(max)} \cos(\alpha)
+    \label{eq_16}
+\end{equation}
+
+Se deduce entonces que de \eqref{eq_15}, la corriente media en la carga estará dada por:
+\begin{equation}
+    I_{L(AV)} = \frac{V_{L(AV)}}{R_{L}} = \frac{3\sqrt{3}}{\pi} \frac{V_{s(max)}}{R_{L}} \cos(\alpha)
+    \label{eq_17}
+\end{equation}
+
+Veamos ahora como calcular la tensión eficaz en la carga para la cual, recordando su definición:
+\begin{equation}
+    V_{L(rms)} = \sqrt{\frac{1}{T} \int_{0}^{T} v_{L}^{2}(t) dt}
+    \label{eq_18}
+\end{equation}
+
+Reemplazando por los valores adecuados, tal como se mostró en \eqref{eq_12}, se tiene que:
+\begin{equation}
+    V_{L(rms)} = \sqrt{\frac{1}{\frac{2\pi}{6}} \int_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{6} + \alpha} (\sqrt{3} V_{s(max)} \cos(\theta))^{2} d\theta}
+    \label{eq_19}
+\end{equation}
+\begin{equation}
+    V_{L(rms)} = V_{s(max)} \sqrt{\frac{9}{\pi} \int_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{6} + \alpha} \frac{1+cos(2\theta)}{2} d\theta}
+    \label{eq_20}
+\end{equation}
+\begin{equation}
+    V_{L(rms)} = V_{s(max)} \sqrt{\frac{9}{2\pi} \left[\theta+\frac{sin(2\theta)}{2}\right]_{-\frac{\pi}{6} + \alpha}^{\frac{\pi}{6} + \alpha}}
+    \label{eq_21}
+\end{equation}
+\begin{equation}
+    V_{L(rms)} = V_{s(max)} \sqrt{\frac{9}{2\pi} \left(\frac{\pi}{3} + \frac{\sin(\frac{\pi}{3} + 2\alpha) - \sin(-\frac{\pi}{3} + 2\alpha)}{2}\right)}
+    \label{eq_22}
+\end{equation}
+
+Aplicando nuevamente la misma propiedad del seno, utilizada entre las ecuaciones descritas en \eqref{eq_14} y \eqref{eq_15}, se simplifica la ecuación \eqref{eq_21} a:
+\begin{equation}
+    \sin\left(2\alpha + \frac{\pi}{3}\right) - \sin\left(2\alpha - \frac{\pi}{3}\right) = 2 \cos(2\alpha) \sin\left(\frac{\pi}{3}\right) = 2 \cos(2\alpha) \left(\frac{\sqrt{3}}{2}\right) = \sqrt{3}\cos(2\alpha)
+    \label{eq_23}
+\end{equation}
+
+Reemplazando lo obtenido en \eqref{eq_22} en \eqref{eq_21}
+\begin{equation}
+    V_{L(rms)} = V_{s(max)} \sqrt{\frac{9}{2\pi} \left(\frac{\pi}{3} + \frac{\sqrt{3}\cos(2\alpha)}{2} \right)}
+    \label{eq_24}
+\end{equation}
+\begin{equation}
+    V_{L(rms)} = V_{s(max)} \sqrt{\frac{3}{2} + \frac{9\sqrt{3}}{4\pi} \cos(2\alpha)}
+    \label{eq_25}
+\end{equation}
+
+Se deduce también que de \eqref{eq_19}, la corriente eficaz en la carga estará dada por:
+\begin{equation}
+    I_{L(rms)} = \frac{V_{L(rms)}}{R_{L}}
+    \label{eq_26}
+\end{equation}
+
+Se propone entonces calcular estos valores de tensiones y corrientes para cada uno de los angulos mencionados en la sección anterior y agruparlos en la siguiente tabla:
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|} \hline
+        \textbf{Ángulo ($\alpha$)} & $V_{L(AV)} \ [V]$ & $I_{L(AV)} \ [A]$ & $V_{L(rms)} \ [V]$ & $I_{L(rms)} \ [A]$ \\ \hline
+            $30 \ [\degree]$  & 101.28 & 4.05 & 102.96 & 4.11 \\ \hline
+            $60 \ [\degree]$  & 58.47  & 2.33 & 66.32  & 2.65 \\ \hline
+            $135 \ [\degree]$ & 0      & 0    & 0      & 0    \\ \hline
+    \end{tabular}
+    \caption{Resultados Teóricos del Rectificador Trifásico Controlado.}
+    \label{tab:tab_1}
+\end{table}
+
+Nótese que los valores para $\alpha_{i} = 135 \ [\degree]$, si se siguen las expresiones desarrolladas en esta sección, es garantizado que estos valores serán distintos de $0$ (inclusive, si por ejemplo se computa el calculo de $V_{L(AV)}$ para este angulo, se obtiene una tensión negativa). Esto se debe a que el modelo matemático para calcular estos valores, asume que las tensiones a través de los tiristores es siempre continua y que efectivamente sigue el valor del coseno inclusive fuera de los límites de integración planteados. Sin embargo, sabemos que el tiristor deja de conducir durante el cruce por cero de la onda de tensión (o corriente en su defecto) tal como lo demuestra la Figura \eqref{fig:fig_12}.
+
+
+
+\subsubsection{Conclusión Parcial}
+Recordando la tabla comparativa efectuada en el \href{https://github.com/ErnestMonja/Electronica-Industrial/tree/main/TPT6%20%20%20-%20Tiristores}{Trabajo Práctico N°6}, la cual se presenta a continuación:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|} \hline
+        \textbf{Ángulo ($\alpha$)} & $V_{L(AV)} \ [V]$ & $I_{L(AV)} \ [A]$ & $V_{L(rms)} \ [V]$ & $I_{L(rms)} \ [A]$ \\ \hline
+            $45 \ [\degree]$   & 99.82 & 3.99 & 102.96 & 4.12 \\ \hline
+            $90 \ [\degree]$   & 58.48 & 2.34 & 75.00 & 3.00 \\ \hline
+            $135 \ [\degree]$  & 17.13 & 0.69 & 31.97 & 1.28 \\ \hline
+    \end{tabular}
+    \caption{Resultados Teóricos del Rectificador Trifásico Semicontrolado.}
+    \label{tab:tab_2}
+\end{table}
+
+Se tiene entonces que dado el análisis teórico y las simulaciones efectuadas para el puente rectificador trifásico totalmente controlado y su contraparte semicontrolado, se pueden establecer las siguientes conclusiones fundamentales respecto a su comportamiento y aplicación:
+
+\begin{itemize}
+    \item \underline{Regulación de la tensión de salida ($V_{L(AV)}$):} En el rectificador controlado, la tensión media en la carga disminuye de forma directa y simétrica a medida que aumenta el ángulo de disparo $\alpha_{i}$. Para una carga puramente resistiva, ángulos de disparo profundos (como $\alpha_{i} = 135 \ [\degree]$) provocan que la tensión de salida sea nula ($0 \ [V]$), ya que los tiristores se polarizan en inversa antes de recibir el pulso. En contraste, en el rectificador semicontrolado, los diodos de la rama inferior proporcionan un camino de rueda libre (también conocido como \textit{freewheeling}) natural. Esto impide que la tensión instantánea en la carga se vuelva negativa, modificando el área de integración y haciendo que la caída de la tensión media sea menos abrupta para los mismos ángulos de disparo.
+    
+    \item \underline{Modos de conducción y Cuadrantes de operación:} El rectificador semicontrolado se encuentra estrictamente limitado a operar en el primer cuadrante (tensión y corriente positivas), actuando únicamente como rectificador mientras tanto, El puente totalmente controlado posee la capacidad teórica de operar en el cuarto cuadrante (tensión media negativa y corriente positiva) si se utiliza con cargas altamente inductivas o activas, permitiendo el modo inversor para devolver energía a la red AC.
+    
+    \item \underline{Complejidad del circuito de control:} La topología semicontrolada resulta significativamente más simple y económica de implementar. Requiere únicamente la sincronización de tres pulsos de disparo para los tiristores superiores, mientras que la mitad inferior conmuta de forma natural. Por otro lado, el rectificador totalmente controlado exige un esquema de control más complejo, capaz de generar y aislar seis pulsos sincronizados (uno cada $60 \ [\degree]$) y, como se demostró en la simulación, requiere garantizar un ancho de pulso adecuado para asegurar el encendido simultáneo de la rama superior e inferior.
+\end{itemize}
+
+Se puede concluir entonces que el rectificador semicontrolado es una solución óptima y de menor costo para aplicaciones que requieren control unidireccional de velocidad o fuentes de tensión variable simples. Sin embargo, el rectificador totalmente controlado es indispensable en escenarios de alta exigencia, como accionamientos de motores de CC con frenado regenerativo, debido a su capacidad bidireccional y control absoluto de la onda.
+
+
+
+\section{Bibliografía}
+\begin{itemize}
+    \raggedright
+    \item \underline{$[1]$:} OnSemi. (s.f.). \textit{1N4007: Standard Recovery Rectifier} [Hoja de datos]. \url{https://www.alldatasheet.com/datasheet-pdf/view/1934502/ONSEMI/1N4007.html}
+    
+    \item \underline{$[2]$:} ROHM Semiconductor. (s.f.). \textit{BZX84C24VL: Zener Diode} [Hoja de datos]. \url{https://www.alldatasheet.com/datasheet-pdf/view/929186/ROHM/BZX84C24VL.html}
+
+    \item \underline{$[3]$:} PAiA Electronics. (s.f.). \textit{The UJT: A Unique Component for Electronic Music} [Artículo técnico]. \url{https://crcomp.net/paia/ujt.php}
+
+    \item \underline{$[4]$:} Stack Exchange. (2013). \textit{Unijunction Transistor in LTSpice} [Foro de discusión]. Electrical Engineering Stack Exchange. \url{https://electronics.stackexchange.com/questions/52023/unijunction-transistor-in-ltspice}
+
+    \item \underline{$[5]$:} Philips Semiconductors. (1991). \textit{2N2646: Silicon Unijunction Transistors} [Hoja de datos]. \url{https://www.alldatasheet.com/datasheet-pdf/view/80358/PHILIPS/2N2646.html}
+
+    \item \underline{$[6]$:}  OnSemi. (s.f.). \textit{2N3906: General Purpose Transistors PNP Silicon} [Hoja de datos]. \url{https://www.alldatasheet.com/datasheet-pdf/view/11471/ONSEMI/2N3906.html}
+
+    \item \underline{$[7]$:} Grunthos, H. M. (2018). \textit{thyristr.lib: SPICE Library for Thyristors} [Código de software]. GitHub. \url{https://github.com/HMGrunthos/InrushTimer/blob/master/thyristr.lib}
+    
+\end{itemize}
+\end{document}

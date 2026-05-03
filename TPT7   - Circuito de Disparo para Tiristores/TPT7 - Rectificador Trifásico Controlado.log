@@ -1,0 +1,43 @@
+LTspice 24.0.12 for Windows
+Circuit: * C:\Users\Ernesto\Desktop\Ingeniería Electrónica\9- Noveno Semestre\Electrónica Industrial\1- Trabajos Prácticos\1- Trabajos Prácticos del Teórico (TPT)\TPT7 - Circuito de Disparo para Tiristores\TPT7 - Rectificador Trifásico Controlado.asc
+Start Time: Sun May  3 03:09:25 2026
+solver = Normal
+Maximum thread count: 12
+tnom = 27
+temp = 27
+method = modified trap
+U1:viak: Missing value, assumed 0V @ DC
+U1:vigf: Missing value, assumed 0V @ DC
+U2:viak: Missing value, assumed 0V @ DC
+U2:vigf: Missing value, assumed 0V @ DC
+U3:viak: Missing value, assumed 0V @ DC
+U3:vigf: Missing value, assumed 0V @ DC
+U4:viak: Missing value, assumed 0V @ DC
+U4:vigf: Missing value, assumed 0V @ DC
+U5:viak: Missing value, assumed 0V @ DC
+U5:vigf: Missing value, assumed 0V @ DC
+U6:viak: Missing value, assumed 0V @ DC
+U6:vigf: Missing value, assumed 0V @ DC
+Direct Newton iteration failed to find .op point.  (Use ".option noopiter" to skip.)
+Starting Gmin stepping
+Gmin = 10
+Gmin = 1.07374
+Gmin = 0.115292
+Gmin = 0.0123794
+Gmin = 0.00132923
+Singular matrix:  Check node d:u2:ka#int1
+   Iteration No. 27
+Gmin = 0
+Singular matrix:  Check nodes d:u6:ton#int1 and u4:control
+   Iteration No. 1
+Gmin stepping failed
+
+Starting source stepping with srcstepmethod=0
+Source Step = 3.0303%
+Source Step = 33.3333%
+Source Step = 63.6364%
+Source Step = 93.9394%
+Source stepping succeeded in finding the operating point.
+
+Total elapsed time: 0.655 seconds.
+
